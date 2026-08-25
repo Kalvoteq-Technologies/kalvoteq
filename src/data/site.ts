@@ -7,11 +7,20 @@
 export const company = {
   name: "kalvoteq",
   legalName: "Kalvoteq Technologies OU",
-  tagline: "Building high-performance software solutions and engineering teams.",
+  registryCode: "17583081",
   email: "hello@kalvoteq.com",
   phone: "+372 54210899",
   address: "Amburi 20, 11711 Tallinn, Estonia",
   hours: "Mon–Fri, 08:00–17:00 EET",
+  tagline: "Building high-performance software solutions and engineering teams.",
+} as const;
+
+export const bankDetails = {
+  accountHolder: "kalvoteq Technologies OÜ",
+  recipientAddress: "Amburi tn 20-30, Põhja-Tallinna linnaosa, Harju maakond, 11711, Tallinn, Estonia",
+  iban: "LT31 3250 0419 8610 7004",
+  bic: "REVOLT21",
+  intermediaryBic: "CHASDEFX",
 } as const;
 
 export type Service = {

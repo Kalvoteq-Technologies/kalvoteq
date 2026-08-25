@@ -52,7 +52,8 @@ export const Route = createFileRoute("/terms")({
       </p>
       <h2>Contact</h2>
       <p>
-        {company.legalName}, {company.address}. Email {company.email}.
+        {company.legalName}, registry code {company.registryCode}, {company.address}. Email{" "}
+        {company.email}.
       </p>
     </LegalPage>
   ),

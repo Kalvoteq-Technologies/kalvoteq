@@ -5,6 +5,7 @@ import { Receipt } from "lucide-react";
 import { PageHero, Section } from "@/components/site/Primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { bankDetails } from "@/data/site";
 import { useAuth } from "@/hooks/useAuth";
 import {
   formatDate,
@@ -107,6 +108,34 @@ function InvoicesPage() {
           </ul>
         )}
       </Section>
+
+      {invoices.length > 0 && (
+        <Section eyebrow="Payment" title="Bank transfer details" muted>
+          <div className="max-w-xl rounded-xl border border-border bg-card p-6">
+            <dl className="space-y-2 text-sm">
+              <div className="flex flex-wrap justify-between gap-4">
+                <dt className="text-muted-foreground">Account holder</dt>
+                <dd className="font-medium">{bankDetails.accountHolder}</dd>
+              </div>
+              <div className="flex flex-wrap justify-between gap-4">
+                <dt className="text-muted-foreground">IBAN</dt>
+                <dd className="font-mono font-medium">{bankDetails.iban}</dd>
+              </div>
+              <div className="flex flex-wrap justify-between gap-4">
+                <dt className="text-muted-foreground">BIC / SWIFT</dt>
+                <dd className="font-mono font-medium">{bankDetails.bic}</dd>
+              </div>
+              <div className="flex flex-wrap justify-between gap-4">
+                <dt className="text-muted-foreground">Intermediary BIC (non-EEA transfers)</dt>
+                <dd className="font-mono font-medium">{bankDetails.intermediaryBic}</dd>
+              </div>
+            </dl>
+            <p className="mt-4 text-xs text-muted-foreground">
+              Please include the invoice number as your payment reference.
+            </p>
+          </div>
+        </Section>
+      )}
     </>
   );
 }
