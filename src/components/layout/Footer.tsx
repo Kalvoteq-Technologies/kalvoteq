@@ -50,7 +50,7 @@ export function Footer() {
             <img
               src={logoSrc}
               alt="kalvoteq"
-              className="h-16 w-auto"
+              className="h-24 w-auto"
               width={1535}
               height={1024}
             />

@@ -133,15 +133,17 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/85 backdrop-blur-xl">
-      <div className="container-page flex h-20 items-center justify-between gap-6">
+      <div className="container-page flex h-24 items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2.5" onClick={() => setMobile(false)}>
-          <img
-            src={logoSrc}
-            alt="kalvoteq"
-            className="h-11 w-auto md:h-14"
-            width={1535}
-            height={1024}
-          />
+          <div className="rounded-lg bg-ink px-3 py-2">
+            <img
+              src={logoSrc}
+              alt="kalvoteq"
+              className="h-16 w-auto md:h-20"
+              width={1535}
+              height={1024}
+            />
+          </div>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
