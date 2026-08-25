@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import logoAsset from "@/assets/kalvoteq-logo.png.asset.json";
+import logoSrc from "@/assets/kalvoteq-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { company, services, industries } from "@/data/site";
@@ -48,11 +48,11 @@ export function Footer() {
         <div>
           <div className="flex items-center gap-2.5">
             <img
-              src={logoAsset.url}
+              src={logoSrc}
               alt="kalvoteq"
               className="h-16 w-auto"
-              width={2029}
-              height={400}
+              width={1535}
+              height={1024}
             />
           </div>
           <p className="mt-4 max-w-sm text-sm text-ink-muted">

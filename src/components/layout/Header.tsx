@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import logoAsset from "@/assets/kalvoteq-logo.png.asset.json";
+import logoSrc from "@/assets/kalvoteq-logo.png";
 import { AccountMenu } from "@/components/layout/AccountMenu";
 import { Button } from "@/components/ui/button";
 import { services, industries } from "@/data/site";
@@ -136,11 +136,11 @@ export function Header() {
       <div className="container-page flex h-20 items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2.5" onClick={() => setMobile(false)}>
           <img
-            src={logoAsset.url}
+            src={logoSrc}
             alt="kalvoteq"
             className="h-11 w-auto md:h-14"
-            width={2029}
-            height={400}
+            width={1535}
+            height={1024}
           />
         </Link>
 
