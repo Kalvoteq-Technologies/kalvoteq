@@ -132,18 +132,16 @@ export function Header() {
   const [mobile, setMobile] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-ink">
       <div className="container-page flex h-28 items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2.5" onClick={() => setMobile(false)}>
-          <div className="rounded-lg bg-ink px-3 py-2">
-            <img
-              src={logoSrc}
-              alt="kalvoteq"
-              className="h-16 w-auto md:h-20"
-              width={1535}
-              height={1024}
-            />
-          </div>
+          <img
+            src={logoSrc}
+            alt="kalvoteq"
+            className="h-16 w-auto md:h-20"
+            width={1535}
+            height={1024}
+          />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
@@ -152,8 +150,8 @@ export function Header() {
             onClick={() => setMega((v) => !v)}
             aria-expanded={mega}
             className={cn(
-              "rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground",
-              mega && "text-foreground",
+              "rounded-md px-3 py-2 text-sm font-medium text-ink-muted transition-colors hover:text-ink-foreground",
+              mega && "text-ink-foreground",
             )}
           >
             Explore
@@ -163,8 +161,8 @@ export function Header() {
               key={item.to}
               to={item.to}
               onClick={() => setMega(false)}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              activeProps={{ className: "text-foreground" }}
+              className="rounded-md px-3 py-2 text-sm font-medium text-ink-muted transition-colors hover:text-ink-foreground"
+              activeProps={{ className: "text-ink-foreground" }}
             >
               {item.label}
             </Link>
@@ -172,7 +170,13 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" aria-label="Toggle dark mode" onClick={toggle}>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="Toggle dark mode"
+            onClick={toggle}
+            className="text-ink-foreground hover:bg-white/10 hover:text-ink-foreground"
+          >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
           <AccountMenu />
@@ -182,7 +186,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className="text-ink-foreground hover:bg-white/10 hover:text-ink-foreground lg:hidden"
             aria-label={mobile ? "Close menu" : "Open menu"}
             onClick={() => setMobile((v) => !v)}
           >

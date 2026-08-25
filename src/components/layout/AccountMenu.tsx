@@ -38,7 +38,13 @@ export function AccountMenu({ onNavigate }: { onNavigate?: () => void }) {
 
   if (!user) {
     return (
-      <Button asChild variant="ghost" size="sm" onClick={onNavigate}>
+      <Button
+        asChild
+        variant="ghost"
+        size="sm"
+        onClick={onNavigate}
+        className="text-ink-foreground hover:bg-white/10 hover:text-ink-foreground"
+      >
         <Link to="/auth">Sign in</Link>
       </Button>
     );
@@ -55,7 +61,12 @@ export function AccountMenu({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label="Account menu">
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Account menu"
+          className="hover:bg-white/10"
+        >
           <Avatar className="h-7 w-7">
             {avatarUrl ? <AvatarImage src={avatarUrl} alt="" /> : null}
             <AvatarFallback className="text-[11px]">
