@@ -45,7 +45,8 @@ export function CompanyLogoUpload({
       if (fileInput.current) fileInput.current.value = "";
       await refresh();
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not upload that logo"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "Could not upload that logo"),
   });
 
   const remove = useMutation({
@@ -66,13 +67,18 @@ export function CompanyLogoUpload({
         Company logo
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        PNG, JPEG, SVG or WebP — max 2 MB. Stored privately; visible to you, kalvoteq admins, and your delivery team.
+        PNG, JPEG, SVG or WebP — max 2 MB. Stored privately; visible to you, kalvoteq admins, and
+        your delivery team.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center gap-5">
         <div className="grid h-20 w-20 shrink-0 place-items-center overflow-hidden rounded-lg border border-border bg-surface">
           {logoUrl ? (
-            <img src={logoUrl} alt="Your company logo" className="h-full w-full object-contain p-2" />
+            <img
+              src={logoUrl}
+              alt="Your company logo"
+              className="h-full w-full object-contain p-2"
+            />
           ) : (
             <Building2 className="h-7 w-7 text-muted-foreground" aria-hidden="true" />
           )}

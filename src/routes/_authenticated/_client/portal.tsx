@@ -22,7 +22,11 @@ export const Route = createFileRoute("/_authenticated/_client/portal")({
   head: () => ({
     meta: [
       { title: "Client portal — kalvoteq" },
-      { name: "description", content: "Your kalvoteq engagement overview: delivery status, deliverables, requests and invoices." },
+      {
+        name: "description",
+        content:
+          "Your kalvoteq engagement overview: delivery status, deliverables, requests and invoices.",
+      },
       { property: "og:title", content: "Client portal — kalvoteq" },
       { property: "og:description", content: "Track your kalvoteq engagement." },
       { name: "robots", content: "noindex" },
@@ -58,7 +62,8 @@ function ClientPortal() {
             <div>
               <h2 className="text-lg font-semibold">Finish setting up your company profile</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Add your company details so your delivery lead and engineers can prepare for the engagement.
+                Add your company details so your delivery lead and engineers can prepare for the
+                engagement.
               </p>
             </div>
             <Button asChild>
@@ -68,21 +73,34 @@ function ClientPortal() {
         )}
 
         <div className="grid gap-6 md:grid-cols-3">
-          <Link to="/portal-deliverables" className="rounded-xl border border-border bg-card p-7 card-hover">
+          <Link
+            to="/portal-deliverables"
+            className="rounded-xl border border-border bg-card p-7 card-hover"
+          >
             <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
             <h2 className="mt-4 text-lg font-semibold">Deliverables</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{deliverables.length} shared with you</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {deliverables.length} shared with you
+            </p>
           </Link>
-          <Link to="/portal-requests" className="rounded-xl border border-border bg-card p-7 card-hover">
+          <Link
+            to="/portal-requests"
+            className="rounded-xl border border-border bg-card p-7 card-hover"
+          >
             <LifeBuoy className="h-5 w-5 text-primary" aria-hidden="true" />
             <h2 className="mt-4 text-lg font-semibold">Requests</h2>
             <p className="mt-2 text-sm text-muted-foreground">{openRequests} open</p>
           </Link>
-          <Link to="/portal-invoices" className="rounded-xl border border-border bg-card p-7 card-hover">
+          <Link
+            to="/portal-invoices"
+            className="rounded-xl border border-border bg-card p-7 card-hover"
+          >
             <Receipt className="h-5 w-5 text-primary" aria-hidden="true" />
             <h2 className="mt-4 text-lg font-semibold">Invoices</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              {outstanding > 0 ? `${formatMoney(outstanding, currency)} outstanding` : "Nothing outstanding"}
+              {outstanding > 0
+                ? `${formatMoney(outstanding, currency)} outstanding`
+                : "Nothing outstanding"}
             </p>
           </Link>
         </div>
@@ -107,7 +125,9 @@ function ClientPortal() {
                   <Badge variant="secondary">{PROJECT_STATUS_LABELS[project.status]}</Badge>
                 </div>
                 {project.summary && (
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{project.summary}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {project.summary}
+                  </p>
                 )}
                 <div className="mt-5">
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -118,11 +138,15 @@ function ClientPortal() {
                 </div>
                 <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">Next milestone</dt>
+                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Next milestone
+                    </dt>
                     <dd className="mt-1">{project.next_milestone || "—"}</dd>
                   </div>
                   <div>
-                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">Target date</dt>
+                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Target date
+                    </dt>
                     <dd className="mt-1">{formatDate(project.target_date)}</dd>
                   </div>
                 </dl>

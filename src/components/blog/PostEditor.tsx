@@ -66,7 +66,8 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
         status,
         category_id: categoryId,
         author_id: userId,
-        published_at: status === "published" ? (post?.published_at ?? new Date().toISOString()) : null,
+        published_at:
+          status === "published" ? (post?.published_at ?? new Date().toISOString()) : null,
       };
 
       let postId = post?.id;
@@ -209,7 +210,11 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
             <Button disabled={save.isPending} onClick={() => save.mutate("published")}>
               {post?.status === "published" ? "Update published post" : "Publish"}
             </Button>
-            <Button variant="outline" disabled={save.isPending} onClick={() => save.mutate("draft")}>
+            <Button
+              variant="outline"
+              disabled={save.isPending}
+              onClick={() => save.mutate("draft")}
+            >
               {post?.status === "published" ? "Revert to draft" : "Save draft"}
             </Button>
             {post && (
@@ -245,13 +250,23 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
           <p className="text-sm font-semibold">Cover image</p>
           {cover ? (
             <div className="mt-3 space-y-2">
-              <img src={imageSrc(cover)} alt="Cover preview" className="aspect-video w-full rounded-lg object-cover" />
+              <img
+                src={imageSrc(cover)}
+                alt="Cover preview"
+                className="aspect-video w-full rounded-lg object-cover"
+              />
               <Button variant="ghost" size="sm" onClick={() => setCover(null)}>
                 <X className="mr-1.5 h-4 w-4" /> Remove
               </Button>
             </div>
           ) : (
-            <Button variant="outline" size="sm" className="mt-3" disabled={uploadingCover} onClick={() => coverInput.current?.click()}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-3"
+              disabled={uploadingCover}
+              onClick={() => coverInput.current?.click()}
+            >
               <ImagePlus className="mr-1.5 h-4 w-4" />
               {uploadingCover ? "Uploading…" : "Upload cover"}
             </Button>
@@ -280,7 +295,9 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
                 onClick={() => setCategoryId(categoryId === c.id ? null : c.id)}
                 className={cn(
                   "rounded-full border border-border px-3 py-1 text-sm transition-colors",
-                  categoryId === c.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                  categoryId === c.id
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {c.name}
@@ -314,10 +331,16 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
                 key={t.id}
                 type="button"
                 aria-pressed={tagIds.includes(t.id)}
-                onClick={() => setTagIds((prev) => (prev.includes(t.id) ? prev.filter((id) => id !== t.id) : [...prev, t.id]))}
+                onClick={() =>
+                  setTagIds((prev) =>
+                    prev.includes(t.id) ? prev.filter((id) => id !== t.id) : [...prev, t.id],
+                  )
+                }
                 className={cn(
                   "rounded-full border border-border px-3 py-1 text-sm transition-colors",
-                  tagIds.includes(t.id) ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:text-foreground",
+                  tagIds.includes(t.id)
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {t.name}

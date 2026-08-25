@@ -104,7 +104,11 @@ export function formatMoney(amountCents: number, currency: string) {
 
 export function formatDate(value: string | null | undefined) {
   if (!value) return "—";
-  return new Date(value).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(value).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 /* --------------------------------- schemas -------------------------------- */
@@ -112,19 +116,44 @@ export function formatDate(value: string | null | undefined) {
 export const projectSchema = z.object({
   client_id: z.string().uuid("Choose a client"),
   name: z.string().trim().min(2, "Project name is required").max(140),
-  summary: z.string().trim().max(1000).optional().transform((v) => v ?? ""),
+  summary: z
+    .string()
+    .trim()
+    .max(1000)
+    .optional()
+    .transform((v) => v ?? ""),
   status: z.enum(["discovery", "in_progress", "on_hold", "delivered"]),
   progress: z.coerce.number().int().min(0).max(100),
-  next_milestone: z.string().trim().max(200).optional().transform((v) => v ?? ""),
-  start_date: z.string().trim().max(20).optional().transform((v) => v ?? ""),
-  target_date: z.string().trim().max(20).optional().transform((v) => v ?? ""),
+  next_milestone: z
+    .string()
+    .trim()
+    .max(200)
+    .optional()
+    .transform((v) => v ?? ""),
+  start_date: z
+    .string()
+    .trim()
+    .max(20)
+    .optional()
+    .transform((v) => v ?? ""),
+  target_date: z
+    .string()
+    .trim()
+    .max(20)
+    .optional()
+    .transform((v) => v ?? ""),
 });
 export type ProjectInput = z.infer<typeof projectSchema>;
 
 export const deliverableSchema = z.object({
   project_id: z.string().uuid("Choose a project"),
   title: z.string().trim().min(2, "Title is required").max(160),
-  description: z.string().trim().max(1000).optional().transform((v) => v ?? ""),
+  description: z
+    .string()
+    .trim()
+    .max(1000)
+    .optional()
+    .transform((v) => v ?? ""),
 });
 export type DeliverableInput = z.infer<typeof deliverableSchema>;
 
@@ -132,20 +161,35 @@ export const requestSchema = z.object({
   subject: z.string().trim().min(3, "Add a short subject").max(160),
   body: z.string().trim().min(5, "Describe your request").max(4000),
   priority: z.enum(PRIORITIES),
-  project_id: z.string().optional().transform((v) => v ?? ""),
+  project_id: z
+    .string()
+    .optional()
+    .transform((v) => v ?? ""),
 });
 export type RequestInput = z.infer<typeof requestSchema>;
 
 export const invoiceSchema = z.object({
   client_id: z.string().uuid("Choose a client"),
-  project_id: z.string().optional().transform((v) => v ?? ""),
+  project_id: z
+    .string()
+    .optional()
+    .transform((v) => v ?? ""),
   number: z.string().trim().min(1, "Invoice number is required").max(60),
-  description: z.string().trim().max(500).optional().transform((v) => v ?? ""),
+  description: z
+    .string()
+    .trim()
+    .max(500)
+    .optional()
+    .transform((v) => v ?? ""),
   amount: z.coerce.number().min(0, "Amount must be positive").max(10_000_000),
   currency: z.string().trim().min(3).max(3),
   status: z.enum(["draft", "sent", "paid", "overdue"]),
   issued_on: z.string().trim().min(1, "Issue date is required"),
-  due_on: z.string().trim().optional().transform((v) => v ?? ""),
+  due_on: z
+    .string()
+    .trim()
+    .optional()
+    .transform((v) => v ?? ""),
 });
 export type InvoiceInput = z.infer<typeof invoiceSchema>;
 
@@ -172,7 +216,10 @@ export const allProjectsQuery = () =>
   queryOptions({
     queryKey: ["projects", "all"],
     queryFn: async (): Promise<Project[]> => {
-      const { data, error } = await supabase.from("projects").select("*").order("created_at", { ascending: false });
+      const { data, error } = await supabase
+        .from("projects")
+        .select("*")
+        .order("created_at", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Project[];
     },
@@ -268,7 +315,10 @@ export const allInvoicesQuery = () =>
   queryOptions({
     queryKey: ["invoices", "all"],
     queryFn: async (): Promise<Invoice[]> => {
-      const { data, error } = await supabase.from("invoices").select("*").order("issued_on", { ascending: false });
+      const { data, error } = await supabase
+        .from("invoices")
+        .select("*")
+        .order("issued_on", { ascending: false });
       if (error) throw error;
       return (data ?? []) as Invoice[];
     },
@@ -301,7 +351,11 @@ export async function deleteProject(id: string) {
 export const DELIVERABLES_BUCKET = "client-deliverables";
 export const MAX_DELIVERABLE_BYTES = 25 * 1024 * 1024;
 
-export async function createDeliverable(input: DeliverableInput, clientId: string, file: File | null) {
+export async function createDeliverable(
+  input: DeliverableInput,
+  clientId: string,
+  file: File | null,
+) {
   let filePath: string | null = null;
   let fileName: string | null = null;
   let mimeType: string | null = null;
@@ -313,7 +367,11 @@ export async function createDeliverable(input: DeliverableInput, clientId: strin
     filePath = `${clientId}/${input.project_id}/${Date.now()}-${safeName}`;
     const { error: uploadError } = await supabase.storage
       .from(DELIVERABLES_BUCKET)
-      .upload(filePath, file, { cacheControl: "3600", upsert: false, contentType: file.type || "application/octet-stream" });
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: file.type || "application/octet-stream",
+      });
     if (uploadError) throw uploadError;
     fileName = file.name;
     mimeType = file.type || "application/octet-stream";
@@ -346,7 +404,9 @@ export async function deleteDeliverable(deliverable: Deliverable) {
 
 /** Short-lived signed URL — the deliverables bucket is private. */
 export async function getDeliverableUrl(path: string): Promise<string> {
-  const { data, error } = await supabase.storage.from(DELIVERABLES_BUCKET).createSignedUrl(path, 300);
+  const { data, error } = await supabase.storage
+    .from(DELIVERABLES_BUCKET)
+    .createSignedUrl(path, 300);
   if (error || !data?.signedUrl) throw error ?? new Error("Could not open that file");
   return data.signedUrl;
 }

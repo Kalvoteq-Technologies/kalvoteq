@@ -11,7 +11,11 @@ export const Route = createFileRoute("/_authenticated/_admin/admin/$id")({
   head: () => ({
     meta: [
       { title: "Edit article — kalvoteq Editorial" },
-      { name: "description", content: "Edit a kalvoteq insights article, manage its category, tags, cover image and publish state." },
+      {
+        name: "description",
+        content:
+          "Edit a kalvoteq insights article, manage its category, tags, cover image and publish state.",
+      },
       { property: "og:title", content: "Edit article — kalvoteq Editorial" },
       { property: "og:description", content: "Edit an insights article." },
       { name: "robots", content: "noindex" },
@@ -27,7 +31,10 @@ function EditPostPage() {
 
   return (
     <Section>
-      <Link to="/admin" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+      <Link
+        to="/admin"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+      >
         <ArrowLeft className="h-4 w-4" /> Back to articles
       </Link>
       <h1 className="mt-6 text-3xl font-bold">Edit article</h1>

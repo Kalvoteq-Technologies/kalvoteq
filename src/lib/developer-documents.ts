@@ -121,20 +121,27 @@ export async function uploadDeveloperDocument(input: {
   return data;
 }
 
-export async function deleteDeveloperDocument(doc: Pick<DeveloperDocument, "id" | "file_path">): Promise<void> {
+export async function deleteDeveloperDocument(
+  doc: Pick<DeveloperDocument, "id" | "file_path">,
+): Promise<void> {
   const { error } = await supabase.from("developer_documents").delete().eq("id", doc.id);
   if (error) throw error;
   await supabase.storage.from(DEV_DOCS_BUCKET).remove([doc.file_path]);
 }
 
 export async function renameDeveloperDocument(id: string, title: string): Promise<void> {
-  const { error } = await supabase.from("developer_documents").update({ title: title.trim() }).eq("id", id);
+  const { error } = await supabase
+    .from("developer_documents")
+    .update({ title: title.trim() })
+    .eq("id", id);
   if (error) throw error;
 }
 
 /** Short-lived signed URL — the bucket is private, so this is the only way to open a file. */
 export async function getDocumentUrl(filePath: string): Promise<string> {
-  const { data, error } = await supabase.storage.from(DEV_DOCS_BUCKET).createSignedUrl(filePath, 300);
+  const { data, error } = await supabase.storage
+    .from(DEV_DOCS_BUCKET)
+    .createSignedUrl(filePath, 300);
   if (error || !data?.signedUrl) throw error ?? new Error("Could not open that document");
   return data.signedUrl;
 }

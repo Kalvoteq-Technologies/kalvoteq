@@ -11,13 +11,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
-import { developerProfileSchema, myDeveloperProfileQuery, saveDeveloperProfile } from "@/lib/member-profiles";
+import {
+  developerProfileSchema,
+  myDeveloperProfileQuery,
+  saveDeveloperProfile,
+} from "@/lib/member-profiles";
 
 export const Route = createFileRoute("/_authenticated/_developer/workspace-profile")({
   head: () => ({
     meta: [
       { title: "Engineer details — kalvoteq workspace" },
-      { name: "description", content: "Share your engineering profile, skills, and availability with the kalvoteq delivery team." },
+      {
+        name: "description",
+        content:
+          "Share your engineering profile, skills, and availability with the kalvoteq delivery team.",
+      },
       { property: "og:title", content: "Engineer details — kalvoteq workspace" },
       { property: "og:description", content: "Complete your kalvoteq developer profile." },
       { name: "robots", content: "noindex" },
@@ -69,10 +77,12 @@ function DeveloperProfilePage() {
       toast.success("Engineer details saved");
       await queryClient.invalidateQueries({ queryKey: ["developer-profile", user?.id] });
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save your details"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "Could not save your details"),
   });
 
-  const set = (key: keyof typeof empty) => (value: string) => setForm((prev) => ({ ...prev, [key]: value }));
+  const set = (key: keyof typeof empty) => (value: string) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
 
   return (
     <>
@@ -90,9 +100,23 @@ function DeveloperProfilePage() {
               save.mutate();
             }}
           >
-            <Field id="headline" label="Headline" required placeholder="Senior backend engineer, distributed systems" value={form.headline} onChange={set("headline")} maxLength={140} />
+            <Field
+              id="headline"
+              label="Headline"
+              required
+              placeholder="Senior backend engineer, distributed systems"
+              value={form.headline}
+              onChange={set("headline")}
+              maxLength={140}
+            />
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field id="company_name" label="Company or agency" value={form.company_name} onChange={set("company_name")} maxLength={120} />
+              <Field
+                id="company_name"
+                label="Company or agency"
+                value={form.company_name}
+                onChange={set("company_name")}
+                maxLength={120}
+              />
               <div className="space-y-2">
                 <Label htmlFor="years_experience">Years of experience</Label>
                 <Input
@@ -104,12 +128,47 @@ function DeveloperProfilePage() {
                   onChange={(e) => set("years_experience")(e.target.value)}
                 />
               </div>
-              <Field id="primary_stack" label="Primary stack" placeholder="TypeScript / Go / AWS" value={form.primary_stack} onChange={set("primary_stack")} maxLength={120} />
-              <Field id="availability" label="Availability" placeholder="Full-time from September" value={form.availability} onChange={set("availability")} maxLength={60} />
-              <Field id="timezone" label="Timezone" placeholder="EET (UTC+2)" value={form.timezone} onChange={set("timezone")} maxLength={60} />
-              <Field id="github_url" label="GitHub" placeholder="https://github.com/…" value={form.github_url} onChange={set("github_url")} maxLength={255} />
+              <Field
+                id="primary_stack"
+                label="Primary stack"
+                placeholder="TypeScript / Go / AWS"
+                value={form.primary_stack}
+                onChange={set("primary_stack")}
+                maxLength={120}
+              />
+              <Field
+                id="availability"
+                label="Availability"
+                placeholder="Full-time from September"
+                value={form.availability}
+                onChange={set("availability")}
+                maxLength={60}
+              />
+              <Field
+                id="timezone"
+                label="Timezone"
+                placeholder="EET (UTC+2)"
+                value={form.timezone}
+                onChange={set("timezone")}
+                maxLength={60}
+              />
+              <Field
+                id="github_url"
+                label="GitHub"
+                placeholder="https://github.com/…"
+                value={form.github_url}
+                onChange={set("github_url")}
+                maxLength={255}
+              />
             </div>
-            <Field id="portfolio_url" label="Portfolio" placeholder="https://" value={form.portfolio_url} onChange={set("portfolio_url")} maxLength={255} />
+            <Field
+              id="portfolio_url"
+              label="Portfolio"
+              placeholder="https://"
+              value={form.portfolio_url}
+              onChange={set("portfolio_url")}
+              maxLength={255}
+            />
             <div className="space-y-2">
               <Label htmlFor="skills">Skills</Label>
               <Textarea
@@ -146,7 +205,6 @@ function DeveloperProfilePage() {
           <div className="lg:col-start-1">
             <DeveloperDocuments userId={user?.id} />
           </div>
-
         </div>
       </Section>
     </>
@@ -173,7 +231,14 @@ function Field({
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
-      <Input id={id} value={value} required={required} placeholder={placeholder} maxLength={maxLength} onChange={(e) => onChange(e.target.value)} />
+      <Input
+        id={id}
+        value={value}
+        required={required}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   );
 }

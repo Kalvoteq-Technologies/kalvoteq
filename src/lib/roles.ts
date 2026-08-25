@@ -56,8 +56,15 @@ export const teamQuery = () =>
     queryKey: ["roles", "team"],
     queryFn: async () => {
       const [{ data: profiles, error: pErr }, { data: roles, error: rErr }] = await Promise.all([
-        supabase.from("profiles").select(sel("id, display_name, avatar_url, created_at")).order("created_at").returns<ProfileRow[]>(),
-        supabase.from("user_roles").select(sel("id, user_id, role, created_at")).returns<UserRoleRow[]>(),
+        supabase
+          .from("profiles")
+          .select(sel("id, display_name, avatar_url, created_at"))
+          .order("created_at")
+          .returns<ProfileRow[]>(),
+        supabase
+          .from("user_roles")
+          .select(sel("id, user_id, role, created_at"))
+          .returns<UserRoleRow[]>(),
       ]);
       if (pErr) throw pErr;
       if (rErr) throw rErr;
@@ -83,7 +90,6 @@ export async function requireRole(role: AppRole, href: string): Promise<void> {
       .maybeSingle();
     return !error && Boolean(data);
   };
-
 
   // Admins have access to every area.
   if (await check(role)) return;

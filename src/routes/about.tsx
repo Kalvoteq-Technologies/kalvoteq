@@ -1,28 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { CTASection, PageHero, Section, Stat } from "@/components/site/Primitives";
+import { CTASection, PageHero, Section } from "@/components/site/Primitives";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { faqs, leadership, values } from "@/data/site";
+import { faqs, values } from "@/data/site";
+import { faqJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About kalvoteq — Estonian Software Consulting Firm" },
+      { title: "About kalvoteq — European Engineering & Technology Consulting" },
       {
         name: "description",
         content:
-          "Our mission, values, leadership, and global delivery model. Headquartered in Tallinn, Estonia, delivering across Europe, the UK, North America, and Africa.",
+          "Kalvoteq is an Estonia-based engineering and technology consulting company helping organizations build software, modernize technology, and access experienced engineering capability.",
       },
-      { property: "og:title", content: "About kalvoteq — Estonian Software Consulting Firm" },
-      { property: "og:description", content: "Senior engineers, transparent delivery, and a decade of building systems that last." },
+      {
+        property: "og:title",
+        content: "About kalvoteq — European Engineering & Technology Consulting",
+      },
+      {
+        property: "og:description",
+        content: "Technology Consulting, Software Engineering, and Global Engineering Talent.",
+      },
       { property: "og:url", content: "/about" },
     ],
     links: [{ rel: "canonical", href: "/about" }],
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(faqs)) }],
   }),
   component: AboutPage,
 });
@@ -33,7 +41,7 @@ function AboutPage() {
       <PageHero
         eyebrow="About"
         title="An engineering firm, run by engineers"
-        intro="kalvoteq exists because too much enterprise software is sold by people who will never maintain it. We build what we recommend, and we stay long enough to be accountable for it."
+        intro="Kalvoteq is an Estonia-based engineering and technology consulting company. We build what we recommend, and we stay long enough to be accountable for it."
       />
 
       <Section>
@@ -66,39 +74,38 @@ function AboutPage() {
         </div>
       </Section>
 
-      <Section eyebrow="Story" title="How we got here">
-        <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="space-y-5 text-base leading-relaxed text-muted-foreground">
-            <p>
-              kalvoteq started in Tallinn with four engineers who had spent a decade inside banking
-              and healthcare platforms, and had watched enough failed programmes to know what caused
-              them: distance between the people deciding and the people building.
-            </p>
-            <p>
-              We kept the structure deliberately flat. Every engagement has a named tech lead who is
-              in the code, an engagement manager who is in the numbers, and no layer between them and
-              the client. Today the firm spans more than eighty engineers across Europe, delivering
-              for organisations in the UK, the Nordics, North America, and West Africa.
-            </p>
-            <p>
-              We have never taken outside investment, which means we choose engagements on fit rather
-              than on quota.
-            </p>
-          </div>
-          <div className="grid gap-6">
-            <Stat value="2016" label="Founded in Tallinn" />
-            <Stat value="80+" label="Engineers and designers" />
-            <Stat value="14" label="Countries delivered into" />
-          </div>
+      <Section eyebrow="Story" title="How we work">
+        <div className="max-w-3xl space-y-5 text-base leading-relaxed text-muted-foreground">
+          <p>
+            Kalvoteq combines technology consulting, software engineering, and global engineering
+            talent to help organizations move from technology strategy to execution. We keep the
+            structure deliberately flat: every engagement has a named tech lead who is in the code,
+            an engagement manager who is in the numbers, and no layer between them and the client.
+          </p>
+          <p>
+            We work in two ways. Where an organisation needs the technology delivered, we design,
+            build, and take responsibility for the outcome. Where an organisation already has the
+            initiative underway and needs engineering capacity, we provide experienced engineers and
+            teams who integrate directly into how that organisation already works.
+          </p>
         </div>
       </Section>
 
-      <Section eyebrow="Delivery" title="Global delivery model" muted>
+      <Section eyebrow="Delivery" title="European company, global engineering capability" muted>
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            { t: "Nearshore core", d: "Delivery hubs in Estonia, Poland, and Portugal with full European time-zone overlap." },
-            { t: "Follow-the-sun support", d: "Operations coverage extended through partner teams in Nairobi and Toronto." },
-            { t: "One process", d: "Same engineering standards, review gates, and reporting regardless of location." },
+            {
+              t: "Estonian headquarters",
+              d: "Kalvoteq is headquartered in Tallinn, Estonia, where engagement management and delivery standards are set.",
+            },
+            {
+              t: "Global engineering talent",
+              d: "We work with experienced engineers across multiple countries, matched to each engagement's skill and time-zone requirements.",
+            },
+            {
+              t: "One delivery standard",
+              d: "Every engagement follows the same engineering standards, review gates, and reporting regardless of where the engineer is based.",
+            },
           ].map((item) => (
             <div key={item.t} className="rounded-lg border border-border bg-card p-7">
               <h3 className="font-semibold">{item.t}</h3>
@@ -108,36 +115,26 @@ function AboutPage() {
         </div>
       </Section>
 
-      <Section eyebrow="Leadership" title="Who you will work with">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {leadership.map((p) => (
-            <div key={p.name} className="rounded-lg border border-border bg-card p-6">
-              <div className="grid h-12 w-12 place-items-center rounded-full bg-ink font-display text-sm font-bold text-ink-foreground">
-                {p.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </div>
-              <h3 className="mt-4 font-semibold">{p.name}</h3>
-              <p className="text-sm text-primary">{p.role}</p>
-              <p className="mt-2 text-sm text-muted-foreground">{p.bio}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       <Section eyebrow="Why Estonia" title="A digital state as a home base" muted>
         <div className="grid gap-10 lg:grid-cols-2">
           <p className="text-base leading-relaxed text-muted-foreground">
-            Estonia has run public services digitally since 2001. That environment produced engineers
-            who treat identity, interoperability, and security as defaults rather than features — and
-            a regulatory culture that makes EU-compliant delivery straightforward.
+            Estonia has run public services digitally since 2001. That environment produced
+            engineers who treat identity, interoperability, and security as defaults rather than
+            features — and a regulatory culture that makes EU-compliant delivery straightforward.
           </p>
           <ul className="space-y-3 text-sm text-muted-foreground">
-            <li className="border-l-2 border-accent pl-4">EU jurisdiction and GDPR-native data handling</li>
-            <li className="border-l-2 border-accent pl-4">e-Residency and fully digital contracting</li>
-            <li className="border-l-2 border-accent pl-4">Deep talent pool in security and distributed systems</li>
-            <li className="border-l-2 border-accent pl-4">Time zone overlapping Europe, the UK, and East Africa</li>
+            <li className="border-l-2 border-accent pl-4">
+              EU jurisdiction and GDPR-native data handling
+            </li>
+            <li className="border-l-2 border-accent pl-4">
+              e-Residency and fully digital contracting
+            </li>
+            <li className="border-l-2 border-accent pl-4">
+              Deep talent pool in security and distributed systems
+            </li>
+            <li className="border-l-2 border-accent pl-4">
+              Time zone overlapping Europe, the UK, and East Africa
+            </li>
           </ul>
         </div>
       </Section>

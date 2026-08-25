@@ -48,7 +48,8 @@ export function DeveloperDocuments({ userId }: { userId: string | undefined }) {
       if (fileInput.current) fileInput.current.value = "";
       await invalidate();
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not upload that file"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "Could not upload that file"),
   });
 
   const remove = useMutation({
@@ -70,7 +71,10 @@ export function DeveloperDocuments({ userId }: { userId: string | undefined }) {
   };
 
   return (
-    <section className="rounded-xl border border-border bg-card p-7" aria-labelledby="documents-heading">
+    <section
+      className="rounded-xl border border-border bg-card p-7"
+      aria-labelledby="documents-heading"
+    >
       <h2 id="documents-heading" className="text-lg font-semibold">
         CV & portfolio documents
       </h2>
@@ -146,8 +150,8 @@ export function DeveloperDocuments({ userId }: { userId: string | undefined }) {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{doc.title}</p>
                   <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {DOC_TYPES.find((t) => t.value === doc.doc_type)?.label ?? doc.doc_type} · {doc.file_name} ·{" "}
-                    {formatBytes(doc.size_bytes)}
+                    {DOC_TYPES.find((t) => t.value === doc.doc_type)?.label ?? doc.doc_type} ·{" "}
+                    {doc.file_name} · {formatBytes(doc.size_bytes)}
                   </p>
                 </div>
                 <Button variant="outline" size="sm" onClick={() => void open(doc)}>

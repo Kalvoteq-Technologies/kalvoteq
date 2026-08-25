@@ -3,8 +3,6 @@ import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-
-
 const roleSchema = z.enum(["admin", "client", "developer"]);
 
 export type TeamRole = z.infer<typeof roleSchema>;
@@ -21,18 +19,24 @@ export interface TeamMember {
 }
 
 /** Throws unless the calling user holds the admin role. Uses the caller's own RLS-scoped client. */
-async function assertAdmin(supabase: {
-  from: (t: "user_roles") => {
-    select: (c: string) => {
-      eq: (
-        c: string,
-        v: string,
-      ) => {
-        eq: (c: string, v: string) => { maybeSingle: () => Promise<{ data: unknown; error: unknown }> };
+async function assertAdmin(
+  supabase: {
+    from: (t: "user_roles") => {
+      select: (c: string) => {
+        eq: (
+          c: string,
+          v: string,
+        ) => {
+          eq: (
+            c: string,
+            v: string,
+          ) => { maybeSingle: () => Promise<{ data: unknown; error: unknown }> };
+        };
       };
     };
-  };
-}, userId: string): Promise<void> {
+  },
+  userId: string,
+): Promise<void> {
   const { data, error } = await supabase
     .from("user_roles")
     .select("role")
@@ -50,12 +54,15 @@ export const listTeam = createServerFn({ method: "GET" })
     await assertAdmin(context.supabase as never, context.userId);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const [{ data: authUsers, error: authError }, { data: profiles }, { data: roles, error: rolesError }] =
-      await Promise.all([
-        supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 }),
-        supabaseAdmin.from("profiles").select("id, display_name, avatar_url"),
-        supabaseAdmin.from("user_roles").select("user_id, role"),
-      ]);
+    const [
+      { data: authUsers, error: authError },
+      { data: profiles },
+      { data: roles, error: rolesError },
+    ] = await Promise.all([
+      supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 200 }),
+      supabaseAdmin.from("profiles").select("id, display_name, avatar_url"),
+      supabaseAdmin.from("user_roles").select("user_id, role"),
+    ]);
     if (authError) throw authError;
     if (rolesError) throw rolesError;
 
@@ -78,9 +85,7 @@ export const listTeam = createServerFn({ method: "GET" })
       id: u.id,
       email: u.email ?? null,
       displayName:
-        nameById.get(u.id) ??
-        (u.user_metadata?.["display_name"] as string | undefined) ??
-        null,
+        nameById.get(u.id) ?? (u.user_metadata?.["display_name"] as string | undefined) ?? null,
       avatarUrl: avatarById.get(u.id) ?? null,
       roles: (roles ?? []).filter((r) => r.user_id === u.id).map((r) => r.role as TeamRole),
       createdAt: u.created_at ?? null,
@@ -95,8 +100,6 @@ const createUserSchema = z.object({
   password: z.string().min(10).max(128),
   roles: z.array(roleSchema).max(3).default([]),
 });
-
-
 
 export const createTeamMember = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -115,7 +118,10 @@ export const createTeamMember = createServerFn({ method: "POST" })
 
     await supabaseAdmin
       .from("profiles")
-      .upsert({ id: created.user.id, display_name: data.displayName || data.email.split("@")[0] || null });
+      .upsert({
+        id: created.user.id,
+        display_name: data.displayName || data.email.split("@")[0] || null,
+      });
 
     if (data.roles.length > 0) {
       const { error: roleError } = await supabaseAdmin
@@ -151,12 +157,18 @@ const setRoleSchema = z.object({
 
 async function countAdmins(admin: {
   from: (t: "user_roles") => {
-    select: (c: string, o: { count: "exact"; head: true }) => {
+    select: (
+      c: string,
+      o: { count: "exact"; head: true },
+    ) => {
       eq: (c: string, v: string) => Promise<{ count: number | null }>;
     };
   };
 }): Promise<number> {
-  const { count } = await admin.from("user_roles").select("id", { count: "exact", head: true }).eq("role", "admin");
+  const { count } = await admin
+    .from("user_roles")
+    .select("id", { count: "exact", head: true })
+    .eq("role", "admin");
   return count ?? 0;
 }
 

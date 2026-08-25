@@ -29,7 +29,10 @@ const schema = z
     password: z.string().min(8, "Password must be at least 8 characters").max(72),
     confirm: z.string(),
   })
-  .refine((v) => v.password === v.confirm, { message: "Passwords do not match", path: ["confirm"] });
+  .refine((v) => v.password === v.confirm, {
+    message: "Passwords do not match",
+    path: ["confirm"],
+  });
 
 function ResetPasswordPage() {
   const navigate = useNavigate();
@@ -71,16 +74,23 @@ function ResetPasswordPage() {
 
   return (
     <>
-      <PageHero eyebrow="Account" title="Choose a new password" intro="Set a new password for your kalvoteq account." />
+      <PageHero
+        eyebrow="Account"
+        title="Choose a new password"
+        intro="Set a new password for your kalvoteq account."
+      />
       <section className="section-y">
         <div className="container-page max-w-md">
           {!ready ? (
             <p className="rounded-xl border border-border bg-card p-7 text-sm text-muted-foreground">
-              Open this page from the password reset link in your email. If the link has expired, request a new one from
-              the sign-in page.
+              Open this page from the password reset link in your email. If the link has expired,
+              request a new one from the sign-in page.
             </p>
           ) : (
-            <form className="space-y-4 rounded-xl border border-border bg-card p-7" onSubmit={submit}>
+            <form
+              className="space-y-4 rounded-xl border border-border bg-card p-7"
+              onSubmit={submit}
+            >
               <div className="space-y-2">
                 <Label htmlFor="password">New password</Label>
                 <Input

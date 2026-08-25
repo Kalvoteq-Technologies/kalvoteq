@@ -1,4 +1,4 @@
-import * as React from 'react'
+import * as React from "react";
 
 import {
   Body,
@@ -10,13 +10,13 @@ import {
   Link,
   Preview,
   Text,
-} from '@react-email/components'
+} from "@react-email/components";
 
 interface SignupEmailProps {
-  siteName: string
-  siteUrl: string
-  recipient: string
-  confirmationUrl: string
+  siteName: string;
+  siteUrl: string;
+  recipient: string;
+  confirmationUrl: string;
 }
 
 export const SignupEmail = ({
@@ -32,7 +32,7 @@ export const SignupEmail = ({
       <Container style={container}>
         <Heading style={h1}>Confirm your email</Heading>
         <Text style={text}>
-          Thanks for signing up for{' '}
+          Thanks for signing up for{" "}
           <Link href={siteUrl} style={link}>
             <strong>{siteName}</strong>
           </Link>
@@ -54,37 +54,40 @@ export const SignupEmail = ({
       </Container>
     </Body>
   </Html>
-)
+);
 
-export default SignupEmail
+export default SignupEmail;
 
-const main = { backgroundColor: '#ffffff', fontFamily: "Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif" }
+const main = {
+  backgroundColor: "#ffffff",
+  fontFamily: "Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+};
 const container = {
-  padding: '32px 28px',
-  maxWidth: '560px',
-  border: '1px solid #e2e8f0',
-  borderRadius: '14px',
-}
+  padding: "32px 28px",
+  maxWidth: "560px",
+  border: "1px solid #e2e8f0",
+  borderRadius: "14px",
+};
 const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#0b1220',
-  letterSpacing: '-0.02em',
-  margin: '0 0 20px',
-}
+  fontSize: "22px",
+  fontWeight: "bold" as const,
+  color: "#0b1220",
+  letterSpacing: "-0.02em",
+  margin: "0 0 20px",
+};
 const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
-const link = { color: '#2563eb', textDecoration: 'underline' }
+  fontSize: "14px",
+  color: "#55575d",
+  lineHeight: "1.5",
+  margin: "0 0 25px",
+};
+const link = { color: "#2563eb", textDecoration: "underline" };
 const button = {
-  backgroundColor: '#2563eb',
-  color: '#ffffff',
-  fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
-  textDecoration: 'none',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+  backgroundColor: "#2563eb",
+  color: "#ffffff",
+  fontSize: "14px",
+  borderRadius: "8px",
+  padding: "12px 20px",
+  textDecoration: "none",
+};
+const footer = { fontSize: "12px", color: "#999999", margin: "30px 0 0" };

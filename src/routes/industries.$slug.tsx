@@ -3,6 +3,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { CTASection, PageHero, Section } from "@/components/site/Primitives";
 import { Badge } from "@/components/ui/badge";
 import { industries, type Industry } from "@/data/site";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/industries/$slug")({
   loader: ({ params }) => {
@@ -12,7 +13,9 @@ export const Route = createFileRoute("/industries/$slug")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Industry not found — kalvoteq" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [{ title: "Industry not found — kalvoteq" }, { name: "robots", content: "noindex" }],
+      };
     }
     const { industry } = loaderData;
     return {
@@ -24,6 +27,18 @@ export const Route = createFileRoute("/industries/$slug")({
         { property: "og:url", content: `/industries/${params.slug}` },
       ],
       links: [{ rel: "canonical", href: `/industries/${params.slug}` }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(
+            breadcrumbJsonLd([
+              { name: "Home", url: "/" },
+              { name: "Industries", url: "/industries" },
+              { name: industry.name, url: `/industries/${params.slug}` },
+            ]),
+          ),
+        },
+      ],
     };
   },
   component: IndustryDetail,
@@ -76,18 +91,25 @@ function IndustryDetail() {
       <Section eyebrow="Technology" title="Relevant technologies" muted>
         <div className="flex flex-wrap gap-2">
           {industry.technologies.map((t) => (
-            <Badge key={t} variant="outline" className="bg-background px-3 py-1.5 text-sm font-normal">
+            <Badge
+              key={t}
+              variant="outline"
+              className="bg-background px-3 py-1.5 text-sm font-normal"
+            >
               {t}
             </Badge>
           ))}
         </div>
       </Section>
 
-      <Section eyebrow="Outcomes" title="Business results we have delivered">
+      <Section eyebrow="Capabilities" title="What we help you solve">
         <div className="grid gap-6 md:grid-cols-3">
-          {industry.outcomes.map((o) => (
-            <div key={o} className="rounded-lg border border-border bg-card p-6 text-sm leading-relaxed">
-              {o}
+          {industry.capabilities.map((c) => (
+            <div
+              key={c}
+              className="rounded-lg border border-border bg-card p-6 text-sm leading-relaxed"
+            >
+              {c}
             </div>
           ))}
         </div>

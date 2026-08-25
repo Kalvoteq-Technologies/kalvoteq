@@ -1,6 +1,15 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Briefcase, LayoutDashboard, LogOut, PenLine, Rocket, ShieldCheck, User as UserIcon, Users } from "lucide-react";
+import {
+  Briefcase,
+  LayoutDashboard,
+  LogOut,
+  PenLine,
+  Rocket,
+  ShieldCheck,
+  User as UserIcon,
+  Users,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -54,7 +63,6 @@ export function AccountMenu({ onNavigate }: { onNavigate?: () => void }) {
             </AvatarFallback>
           </Avatar>
         </Button>
-
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuLabel className="truncate">

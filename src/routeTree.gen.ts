@@ -18,8 +18,9 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ScaleYourTeamRouteImport } from './routes/scale-your-team'
 import { Route as SearchRouteImport } from './routes/search'
-import { Route as SolutionsRouteImport } from './routes/solutions'
+import { Route as StartAProjectRouteImport } from './routes/start-a-project'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/_admin/route'
@@ -35,6 +36,7 @@ import { Route as InsightsIndexRouteImport } from './routes/insights.index'
 import { Route as InsightsSlugRouteImport } from './routes/insights.$slug'
 import { Route as ServicesIndexRouteImport } from './routes/services.index'
 import { Route as ServicesSlugRouteImport } from './routes/services.$slug'
+import { Route as ServicesTeamAugmentationRouteImport } from './routes/services.team-augmentation'
 import { Route as AuthenticatedClientPortalRouteImport } from './routes/_authenticated/_client/portal'
 import { Route as AuthenticatedClientPortalDeliverablesRouteImport } from './routes/_authenticated/_client/portal-deliverables'
 import { Route as AuthenticatedClientPortalInvoicesRouteImport } from './routes/_authenticated/_client/portal-invoices'
@@ -94,14 +96,19 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScaleYourTeamRoute = ScaleYourTeamRouteImport.update({
+  id: '/scale-your-team',
+  path: '/scale-your-team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SolutionsRoute = SolutionsRouteImport.update({
-  id: '/solutions',
-  path: '/solutions',
+const StartAProjectRoute = StartAProjectRouteImport.update({
+  id: '/start-a-project',
+  path: '/start-a-project',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TermsRoute = TermsRouteImport.update({
@@ -178,6 +185,12 @@ const ServicesSlugRoute = ServicesSlugRouteImport.update({
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesTeamAugmentationRoute =
+  ServicesTeamAugmentationRouteImport.update({
+    id: '/services/team-augmentation',
+    path: '/services/team-augmentation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedClientPortalRoute =
   AuthenticatedClientPortalRouteImport.update({
     id: '/portal',
@@ -271,8 +284,9 @@ export interface FileRoutesByFullPath {
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/scale-your-team': typeof ScaleYourTeamRoute
   '/search': typeof SearchRoute
-  '/solutions': typeof SolutionsRoute
+  '/start-a-project': typeof StartAProjectRoute
   '/terms': typeof TermsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -281,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/industries/$slug': typeof IndustriesSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/services/team-augmentation': typeof ServicesTeamAugmentationRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/insights/': typeof InsightsIndexRoute
@@ -309,8 +324,9 @@ export interface FileRoutesByTo {
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/scale-your-team': typeof ScaleYourTeamRoute
   '/search': typeof SearchRoute
-  '/solutions': typeof SolutionsRoute
+  '/start-a-project': typeof StartAProjectRoute
   '/terms': typeof TermsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/account': typeof AuthenticatedAccountRoute
@@ -319,6 +335,7 @@ export interface FileRoutesByTo {
   '/industries/$slug': typeof IndustriesSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/services/team-augmentation': typeof ServicesTeamAugmentationRoute
   '/case-studies': typeof CaseStudiesIndexRoute
   '/industries': typeof IndustriesIndexRoute
   '/insights': typeof InsightsIndexRoute
@@ -349,8 +366,9 @@ export interface FileRoutesById {
   '/cookies': typeof CookiesRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/scale-your-team': typeof ScaleYourTeamRoute
   '/search': typeof SearchRoute
-  '/solutions': typeof SolutionsRoute
+  '/start-a-project': typeof StartAProjectRoute
   '/terms': typeof TermsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/_authenticated/_admin': typeof AuthenticatedAdminRouteRouteWithChildren
@@ -362,6 +380,7 @@ export interface FileRoutesById {
   '/industries/$slug': typeof IndustriesSlugRoute
   '/insights/$slug': typeof InsightsSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/services/team-augmentation': typeof ServicesTeamAugmentationRoute
   '/case-studies/': typeof CaseStudiesIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/insights/': typeof InsightsIndexRoute
@@ -392,8 +411,9 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/privacy'
     | '/reset-password'
+    | '/scale-your-team'
     | '/search'
-    | '/solutions'
+    | '/start-a-project'
     | '/terms'
     | '/unauthorized'
     | '/account'
@@ -402,6 +422,7 @@ export interface FileRouteTypes {
     | '/industries/$slug'
     | '/insights/$slug'
     | '/services/$slug'
+    | '/services/team-augmentation'
     | '/case-studies/'
     | '/industries/'
     | '/insights/'
@@ -430,8 +451,9 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/privacy'
     | '/reset-password'
+    | '/scale-your-team'
     | '/search'
-    | '/solutions'
+    | '/start-a-project'
     | '/terms'
     | '/unauthorized'
     | '/account'
@@ -440,6 +462,7 @@ export interface FileRouteTypes {
     | '/industries/$slug'
     | '/insights/$slug'
     | '/services/$slug'
+    | '/services/team-augmentation'
     | '/case-studies'
     | '/industries'
     | '/insights'
@@ -469,8 +492,9 @@ export interface FileRouteTypes {
     | '/cookies'
     | '/privacy'
     | '/reset-password'
+    | '/scale-your-team'
     | '/search'
-    | '/solutions'
+    | '/start-a-project'
     | '/terms'
     | '/unauthorized'
     | '/_authenticated/_admin'
@@ -482,6 +506,7 @@ export interface FileRouteTypes {
     | '/industries/$slug'
     | '/insights/$slug'
     | '/services/$slug'
+    | '/services/team-augmentation'
     | '/case-studies/'
     | '/industries/'
     | '/insights/'
@@ -512,14 +537,16 @@ export interface RootRouteChildren {
   CookiesRoute: typeof CookiesRoute
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ScaleYourTeamRoute: typeof ScaleYourTeamRoute
   SearchRoute: typeof SearchRoute
-  SolutionsRoute: typeof SolutionsRoute
+  StartAProjectRoute: typeof StartAProjectRoute
   TermsRoute: typeof TermsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   CaseStudiesSlugRoute: typeof CaseStudiesSlugRoute
   IndustriesSlugRoute: typeof IndustriesSlugRoute
   InsightsSlugRoute: typeof InsightsSlugRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
+  ServicesTeamAugmentationRoute: typeof ServicesTeamAugmentationRoute
   CaseStudiesIndexRoute: typeof CaseStudiesIndexRoute
   IndustriesIndexRoute: typeof IndustriesIndexRoute
   InsightsIndexRoute: typeof InsightsIndexRoute
@@ -592,6 +619,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scale-your-team': {
+      id: '/scale-your-team'
+      path: '/scale-your-team'
+      fullPath: '/scale-your-team'
+      preLoaderRoute: typeof ScaleYourTeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -599,11 +633,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/solutions': {
-      id: '/solutions'
-      path: '/solutions'
-      fullPath: '/solutions'
-      preLoaderRoute: typeof SolutionsRouteImport
+    '/start-a-project': {
+      id: '/start-a-project'
+      path: '/start-a-project'
+      fullPath: '/start-a-project'
+      preLoaderRoute: typeof StartAProjectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms': {
@@ -709,6 +743,13 @@ declare module '@tanstack/react-router' {
       path: '/services/$slug'
       fullPath: '/services/$slug'
       preLoaderRoute: typeof ServicesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/team-augmentation': {
+      id: '/services/team-augmentation'
+      path: '/services/team-augmentation'
+      fullPath: '/services/team-augmentation'
+      preLoaderRoute: typeof ServicesTeamAugmentationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/_client/portal': {
@@ -910,14 +951,16 @@ const rootRouteChildren: RootRouteChildren = {
   CookiesRoute: CookiesRoute,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ScaleYourTeamRoute: ScaleYourTeamRoute,
   SearchRoute: SearchRoute,
-  SolutionsRoute: SolutionsRoute,
+  StartAProjectRoute: StartAProjectRoute,
   TermsRoute: TermsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   CaseStudiesSlugRoute: CaseStudiesSlugRoute,
   IndustriesSlugRoute: IndustriesSlugRoute,
   InsightsSlugRoute: InsightsSlugRoute,
   ServicesSlugRoute: ServicesSlugRoute,
+  ServicesTeamAugmentationRoute: ServicesTeamAugmentationRoute,
   CaseStudiesIndexRoute: CaseStudiesIndexRoute,
   IndustriesIndexRoute: IndustriesIndexRoute,
   InsightsIndexRoute: InsightsIndexRoute,

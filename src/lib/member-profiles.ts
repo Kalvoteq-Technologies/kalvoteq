@@ -38,7 +38,10 @@ const optionalUrl = z
   .max(255)
   .optional()
   .transform((v) => (v ? v : ""))
-  .refine((v) => v === "" || /^https?:\/\/\S+$/i.test(v), "Enter a full URL starting with https://");
+  .refine(
+    (v) => v === "" || /^https?:\/\/\S+$/i.test(v),
+    "Enter a full URL starting with https://",
+  );
 
 const optionalText = (max = 120) =>
   z
@@ -55,14 +58,24 @@ export const clientProfileSchema = z.object({
   company_size: optionalText(60),
   country: optionalText(80),
   role_title: optionalText(),
-  needs: z.string().trim().max(1000).optional().transform((v) => v ?? ""),
+  needs: z
+    .string()
+    .trim()
+    .max(1000)
+    .optional()
+    .transform((v) => v ?? ""),
 });
 
 export const developerProfileSchema = z.object({
   headline: z.string().trim().min(2, "Add a short headline").max(140),
   company_name: optionalText(),
   years_experience: z.coerce.number().int().min(0, "Must be 0 or more").max(60),
-  skills: z.string().trim().max(400).optional().transform((v) => v ?? ""),
+  skills: z
+    .string()
+    .trim()
+    .max(400)
+    .optional()
+    .transform((v) => v ?? ""),
   primary_stack: optionalText(),
   availability: optionalText(60),
   timezone: optionalText(60),
@@ -161,7 +174,11 @@ export async function uploadClientLogo(userId: string, file: File): Promise<stri
 
   const { error: uploadError } = await supabase.storage
     .from(CLIENT_LOGOS_BUCKET)
-    .upload(path, file, { cacheControl: "3600", upsert: false, contentType: file.type || "image/png" });
+    .upload(path, file, {
+      cacheControl: "3600",
+      upsert: false,
+      contentType: file.type || "image/png",
+    });
   if (uploadError) throw uploadError;
 
   const { data: existing } = await supabase
@@ -187,14 +204,19 @@ export async function uploadClientLogo(userId: string, file: File): Promise<stri
 }
 
 export async function removeClientLogo(userId: string, path: string): Promise<void> {
-  const { error } = await supabase.from("client_profiles").update({ logo_path: null }).eq("user_id", userId);
+  const { error } = await supabase
+    .from("client_profiles")
+    .update({ logo_path: null })
+    .eq("user_id", userId);
   if (error) throw error;
   await supabase.storage.from(CLIENT_LOGOS_BUCKET).remove([path]);
 }
 
 /** Short-lived signed URL — the logo bucket is private. */
 export async function getClientLogoUrl(path: string): Promise<string> {
-  const { data, error } = await supabase.storage.from(CLIENT_LOGOS_BUCKET).createSignedUrl(path, 300);
+  const { data, error } = await supabase.storage
+    .from(CLIENT_LOGOS_BUCKET)
+    .createSignedUrl(path, 300);
   if (error || !data?.signedUrl) throw error ?? new Error("Could not load that logo");
   return data.signedUrl;
 }

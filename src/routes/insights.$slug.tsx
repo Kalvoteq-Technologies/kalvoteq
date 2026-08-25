@@ -12,9 +12,15 @@ export const Route = createFileRoute("/insights/$slug")({
   head: ({ params }) => ({
     meta: [
       { title: `${params.slug.replace(/-/g, " ")} — kalvoteq Insights` },
-      { name: "description", content: "An engineering field note from the kalvoteq delivery team." },
+      {
+        name: "description",
+        content: "An engineering field note from the kalvoteq delivery team.",
+      },
       { property: "og:title", content: `${params.slug.replace(/-/g, " ")} — kalvoteq Insights` },
-      { property: "og:description", content: "An engineering field note from the kalvoteq delivery team." },
+      {
+        property: "og:description",
+        content: "An engineering field note from the kalvoteq delivery team.",
+      },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -39,7 +45,9 @@ function ArticlePage() {
     return (
       <Section>
         <h1 className="text-3xl font-bold">Article not found</h1>
-        <p className="mt-3 text-muted-foreground">This article may have been unpublished or moved.</p>
+        <p className="mt-3 text-muted-foreground">
+          This article may have been unpublished or moved.
+        </p>
         <Button asChild className="mt-6">
           <Link to="/insights">Back to insights</Link>
         </Button>
@@ -51,7 +59,10 @@ function ArticlePage() {
     <>
       <article>
         <Section>
-          <Link to="/insights" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+          <Link
+            to="/insights"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+          >
             <ArrowLeft className="h-4 w-4" /> All insights
           </Link>
 
@@ -62,7 +73,11 @@ function ArticlePage() {
             <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
               {post.published_at && (
                 <time dateTime={post.published_at}>
-                  {new Date(post.published_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                  {new Date(post.published_at).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
                 </time>
               )}
               {post.reading_time && (
@@ -88,7 +103,10 @@ function ArticlePage() {
           {postTags(post).length > 0 && (
             <div className="mt-12 flex flex-wrap gap-2 border-t border-border pt-8">
               {postTags(post).map((t) => (
-                <span key={t.id} className="rounded-full border border-border px-3 py-1 text-sm text-muted-foreground">
+                <span
+                  key={t.id}
+                  className="rounded-full border border-border px-3 py-1 text-sm text-muted-foreground"
+                >
                   {t.name}
                 </span>
               ))}

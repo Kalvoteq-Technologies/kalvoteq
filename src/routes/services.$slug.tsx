@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { processSteps, services, type Service } from "@/data/site";
+import { breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/services/$slug")({
   loader: ({ params }) => {
@@ -20,7 +21,9 @@ export const Route = createFileRoute("/services/$slug")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Service not found — kalvoteq" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [{ title: "Service not found — kalvoteq" }, { name: "robots", content: "noindex" }],
+      };
     }
     const { service } = loaderData;
     return {
@@ -43,6 +46,19 @@ export const Route = createFileRoute("/services/$slug")({
             provider: { "@type": "Organization", name: "kalvoteq" },
           }),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(
+            breadcrumbJsonLd([
+              { name: "Home", url: "/" },
+              { name: "Services", url: "/services" },
+              { name: service.title, url: `/services/${params.slug}` },
+            ]),
+          ),
+        },
+        ...(service.faqs.length > 0
+          ? [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(service.faqs)) }]
+          : []),
       ],
     };
   },
@@ -54,7 +70,11 @@ function ServiceDetail() {
 
   return (
     <>
-      <PageHero eyebrow="Service" title={service.title} intro={service.overview}>
+      <PageHero
+        eyebrow={service.category === "engineering" ? "Engineering" : "Transformation"}
+        title={service.title}
+        intro={service.overview}
+      >
         <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground">
             Home
@@ -82,7 +102,11 @@ function ServiceDetail() {
       <Section eyebrow="Technology" title="Stack we work in" muted>
         <div className="flex flex-wrap gap-2">
           {service.stack.map((t) => (
-            <Badge key={t} variant="outline" className="bg-background px-3 py-1.5 text-sm font-normal">
+            <Badge
+              key={t}
+              variant="outline"
+              className="bg-background px-3 py-1.5 text-sm font-normal"
+            >
               {t}
             </Badge>
           ))}

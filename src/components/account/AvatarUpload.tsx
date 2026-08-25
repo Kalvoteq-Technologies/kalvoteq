@@ -48,7 +48,8 @@ export function AvatarUpload({
       if (fileInput.current) fileInput.current.value = "";
       await refresh();
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not upload that image"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "Could not upload that image"),
   });
 
   const remove = useMutation({
@@ -64,7 +65,10 @@ export function AvatarUpload({
   });
 
   return (
-    <section className="rounded-xl border border-border bg-card p-7" aria-labelledby="avatar-heading">
+    <section
+      className="rounded-xl border border-border bg-card p-7"
+      aria-labelledby="avatar-heading"
+    >
       <h2 id="avatar-heading" className="text-lg font-semibold">
         Profile picture
       </h2>

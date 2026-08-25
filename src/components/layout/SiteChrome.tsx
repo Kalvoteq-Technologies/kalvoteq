@@ -48,7 +48,8 @@ export function CookieBanner() {
       className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-3xl rounded-lg border border-border bg-card p-5 shadow-xl sm:flex sm:items-center sm:gap-6"
     >
       <p className="text-sm text-muted-foreground">
-        We use essential cookies to run this site and optional analytics cookies to improve it. Read our{" "}
+        We use essential cookies to run this site and optional analytics cookies to improve it. Read
+        our{" "}
         <Link to="/cookies" className="font-medium text-primary underline-offset-4 hover:underline">
           cookie policy
         </Link>
@@ -61,7 +62,12 @@ export function CookieBanner() {
         <Button size="sm" onClick={() => decide("accepted")}>
           Accept all
         </Button>
-        <Button variant="ghost" size="icon" aria-label="Dismiss cookie banner" onClick={() => decide("essential")}>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Dismiss cookie banner"
+          onClick={() => decide("essential")}
+        >
           <X className="h-4 w-4" />
         </Button>
       </div>

@@ -22,7 +22,11 @@ export const Route = createFileRoute("/_authenticated/onboarding")({
   head: () => ({
     meta: [
       { title: "Getting started — kalvoteq" },
-      { name: "description", content: "Your personalised kalvoteq onboarding checklist with the next steps for your role." },
+      {
+        name: "description",
+        content:
+          "Your personalised kalvoteq onboarding checklist with the next steps for your role.",
+      },
       { property: "og:title", content: "Getting started — kalvoteq" },
       { property: "og:description", content: "Complete your kalvoteq setup step by step." },
       { name: "robots", content: "noindex" },
@@ -101,13 +105,19 @@ function OnboardingPage() {
                     />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-xs uppercase tracking-wider text-muted-foreground">Step {index + 1}</p>
-                    <h2 className={`text-base font-semibold ${complete ? "text-muted-foreground line-through" : ""}`}>
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Step {index + 1}
+                    </p>
+                    <h2
+                      className={`text-base font-semibold ${complete ? "text-muted-foreground line-through" : ""}`}
+                    >
                       {step.title}
                     </h2>
                     <p className="text-sm text-muted-foreground">{step.description}</p>
                     {step.auto && !complete && (
-                      <p className="text-xs text-muted-foreground">This step completes automatically once saved.</p>
+                      <p className="text-xs text-muted-foreground">
+                        This step completes automatically once saved.
+                      </p>
                     )}
                   </div>
                   <Button asChild variant={complete ? "ghost" : "outline"} size="sm">
@@ -120,7 +130,11 @@ function OnboardingPage() {
 
           {percent === 100 && (
             <p className="text-center text-sm text-muted-foreground">
-              You are all set. Anything unclear? <Link to="/contact" className="underline underline-offset-4">Talk to us</Link>.
+              You are all set. Anything unclear?{" "}
+              <Link to="/contact" className="underline underline-offset-4">
+                Talk to us
+              </Link>
+              .
             </p>
           )}
         </div>

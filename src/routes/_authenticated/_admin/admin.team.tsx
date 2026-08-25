@@ -34,10 +34,14 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
 import { initialsFrom } from "@/lib/avatars";
 import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES, type AppRole } from "@/lib/roles";
-import { createTeamMember, listTeam, revokeAllAccess, setTeamRole, type TeamMember } from "@/lib/team.functions";
+import {
+  createTeamMember,
+  listTeam,
+  revokeAllAccess,
+  setTeamRole,
+  type TeamMember,
+} from "@/lib/team.functions";
 import { cn } from "@/lib/utils";
-
-
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/team")({
   head: () => ({
@@ -45,7 +49,8 @@ export const Route = createFileRoute("/_authenticated/_admin/admin/team")({
       { title: "Team & access — kalvoteq Admin" },
       {
         name: "description",
-        content: "Create accounts, grant admin, client, or developer roles, and revoke access safely.",
+        content:
+          "Create accounts, grant admin, client, or developer roles, and revoke access safely.",
       },
       { property: "og:title", content: "Team & access — kalvoteq Admin" },
       { property: "og:description", content: "Manage platform accounts and access levels." },
@@ -69,7 +74,11 @@ function TeamPage() {
   const setRoleFn = useServerFn(setTeamRole);
   const revokeFn = useServerFn(revokeAllAccess);
 
-  const { data: team = [], isLoading, error } = useQuery({
+  const {
+    data: team = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["team", "members"],
     queryFn: () => fetchTeam(),
   });
@@ -78,7 +87,8 @@ function TeamPage() {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ["team", "members"] });
 
   const toggleRole = useMutation({
-    mutationFn: (vars: { userId: string; role: AppRole; granted: boolean }) => setRoleFn({ data: vars }),
+    mutationFn: (vars: { userId: string; role: AppRole; granted: boolean }) =>
+      setRoleFn({ data: vars }),
     onSuccess: (_d, vars) => {
       void invalidate();
       void queryClient.invalidateQueries({ queryKey: ["roles"] });
@@ -203,18 +213,22 @@ function TeamPage() {
           <Badge variant="secondary" className="mr-2">
             Safety
           </Badge>
-          You cannot remove your own admin role, and the last remaining admin can never be revoked — so the platform
-          stays reachable.
+          You cannot remove your own admin role, and the last remaining admin can never be revoked —
+          so the platform stays reachable.
         </p>
       </Section>
 
-      <AlertDialog open={pendingRevoke !== null} onOpenChange={(open) => !open && setPendingRevoke(null)}>
+      <AlertDialog
+        open={pendingRevoke !== null}
+        onOpenChange={(open) => !open && setPendingRevoke(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Revoke all access?</AlertDialogTitle>
             <AlertDialogDescription>
-              {pendingRevoke?.email} will keep their account but lose every role, so they can no longer open the admin,
-              client, or developer areas. You can grant roles again at any time.
+              {pendingRevoke?.email} will keep their account but lose every role, so they can no
+              longer open the admin, client, or developer areas. You can grant roles again at any
+              time.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -255,7 +269,6 @@ function CreateUserDialog({ onCreate }: { onCreate: (values: CreateValues) => Pr
     if (!email.trim()) return;
     setBusy(true);
 
-
     try {
       await onCreate({ email: email.trim(), displayName: displayName.trim(), password, roles });
       toast.success("Account created", { description: "Share the temporary password securely." });
@@ -283,8 +296,8 @@ function CreateUserDialog({ onCreate }: { onCreate: (values: CreateValues) => Pr
           <DialogHeader>
             <DialogTitle>Create a user</DialogTitle>
             <DialogDescription>
-              The account is confirmed immediately. Share the temporary password over a secure channel and ask them to
-              change it after the first sign-in.
+              The account is confirmed immediately. Share the temporary password over a secure
+              channel and ask them to change it after the first sign-in.
             </DialogDescription>
           </DialogHeader>
 
@@ -322,7 +335,11 @@ function CreateUserDialog({ onCreate }: { onCreate: (values: CreateValues) => Pr
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button type="button" variant="outline" onClick={() => setPassword(generatePassword())}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setPassword(generatePassword())}
+                >
                   Regenerate
                 </Button>
               </div>
@@ -335,7 +352,9 @@ function CreateUserDialog({ onCreate }: { onCreate: (values: CreateValues) => Pr
                     <Checkbox
                       checked={roles.includes(role)}
                       onCheckedChange={(checked) =>
-                        setRoles((prev) => (checked ? [...prev, role] : prev.filter((r) => r !== role)))
+                        setRoles((prev) =>
+                          checked ? [...prev, role] : prev.filter((r) => r !== role),
+                        )
                       }
                     />
                     {ROLE_LABELS[role]}

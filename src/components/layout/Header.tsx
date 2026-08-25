@@ -5,17 +5,24 @@ import { useEffect, useState } from "react";
 import logoAsset from "@/assets/kalvoteq-logo.png.asset.json";
 import { AccountMenu } from "@/components/layout/AccountMenu";
 import { Button } from "@/components/ui/button";
-import { services, industries, solutions } from "@/data/site";
+import { services, industries } from "@/data/site";
 import { cn } from "@/lib/utils";
 
 const primaryNav = [
   { label: "Services", to: "/services" },
   { label: "Industries", to: "/industries" },
-  { label: "Solutions", to: "/solutions" },
   { label: "Case Studies", to: "/case-studies" },
   { label: "Insights", to: "/insights" },
   { label: "About", to: "/about" },
   { label: "Careers", to: "/careers" },
+] as const;
+
+const teamsNav = [
+  { label: "Dedicated Developers", hash: "engagement-models" },
+  { label: "Team Augmentation", hash: undefined },
+  { label: "Dedicated Engineering Squads", hash: "dedicated-squad" },
+  { label: "Technical Specialists", hash: "engineer-categories" },
+  { label: "Time & Materials", hash: "time-and-materials" },
 ] as const;
 
 function useTheme() {
@@ -42,12 +49,15 @@ function useTheme() {
 }
 
 function MegaMenu({ onNavigate }: { onNavigate: () => void }) {
+  const engineering = services.filter((s) => s.category === "engineering").slice(0, 5);
+  const transformation = services.filter((s) => s.category === "transformation").slice(0, 5);
+
   return (
-    <div className="container-page grid gap-10 py-8 lg:grid-cols-3">
+    <div className="container-page grid gap-10 py-8 lg:grid-cols-4">
       <div>
-        <p className="eyebrow">Services</p>
+        <p className="eyebrow">Engineering</p>
         <ul className="mt-4 space-y-2">
-          {services.slice(0, 6).map((s) => (
+          {engineering.map((s) => (
             <li key={s.slug}>
               <Link
                 to="/services/$slug"
@@ -56,6 +66,40 @@ function MegaMenu({ onNavigate }: { onNavigate: () => void }) {
                 className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
                 {s.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p className="eyebrow">Transformation</p>
+        <ul className="mt-4 space-y-2">
+          {transformation.map((s) => (
+            <li key={s.slug}>
+              <Link
+                to="/services/$slug"
+                params={{ slug: s.slug }}
+                onClick={onNavigate}
+                className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                {s.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p className="eyebrow">Teams</p>
+        <ul className="mt-4 space-y-2">
+          {teamsNav.map((t) => (
+            <li key={t.label}>
+              <Link
+                to="/services/team-augmentation"
+                hash={t.hash}
+                onClick={onNavigate}
+                className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+              >
+                {t.label}
               </Link>
             </li>
           ))}
@@ -73,23 +117,6 @@ function MegaMenu({ onNavigate }: { onNavigate: () => void }) {
                 className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
                 {i.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <p className="eyebrow">Solutions</p>
-        <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2">
-          {solutions.map((s) => (
-            <li key={s.slug}>
-              <Link
-                to="/solutions"
-                hash={s.slug}
-                onClick={onNavigate}
-                className="block rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-              >
-                {s.title}
               </Link>
             </li>
           ))}
@@ -148,7 +175,7 @@ export function Header() {
           </Button>
           <AccountMenu />
           <Button asChild className="hidden sm:inline-flex">
-            <Link to="/contact">Book consultation</Link>
+            <Link to="/contact">Talk to an Expert</Link>
           </Button>
           <Button
             variant="ghost"
@@ -181,8 +208,12 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Link to="/contact" onClick={() => setMobile(false)} className="py-3 text-sm font-medium text-primary">
-              Book consultation
+            <Link
+              to="/contact"
+              onClick={() => setMobile(false)}
+              className="py-3 text-sm font-medium text-primary"
+            >
+              Talk to an Expert
             </Link>
           </nav>
         </div>

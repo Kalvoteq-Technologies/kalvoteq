@@ -12,8 +12,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { sendWelcomeEmailToSelf } from "@/lib/welcome.functions";
 
-
-
 const searchSchema = z.object({ redirect: z.string().optional() });
 
 export const Route = createFileRoute("/auth")({
@@ -21,7 +19,11 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — kalvoteq Editorial" },
-      { name: "description", content: "Sign in to the kalvoteq editorial workspace to draft, edit, and publish insights articles." },
+      {
+        name: "description",
+        content:
+          "Sign in to the kalvoteq editorial workspace to draft, edit, and publish insights articles.",
+      },
       { property: "og:title", content: "Sign in — kalvoteq Editorial" },
       { property: "og:description", content: "Access the kalvoteq insights editor." },
       { name: "robots", content: "noindex" },
@@ -58,7 +60,6 @@ function AuthPage() {
       return;
     }
     setBusy(true);
-
 
     try {
       if (mode === "signin") {
@@ -108,7 +109,6 @@ function AuthPage() {
   }
 
   async function google() {
-
     setBusy(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -123,7 +123,11 @@ function AuthPage() {
 
   return (
     <>
-      <PageHero eyebrow="Editorial" title="Sign in to the editor" intro="Draft, review, and publish kalvoteq insights articles." />
+      <PageHero
+        eyebrow="Editorial"
+        title="Sign in to the editor"
+        intro="Draft, review, and publish kalvoteq insights articles."
+      />
       <section className="section-y">
         <div className="container-page max-w-md">
           <Tabs defaultValue="signin">
@@ -147,7 +151,14 @@ function AuthPage() {
                 >
                   <div className="space-y-2">
                     <Label htmlFor={`${mode}-email`}>Work email</Label>
-                    <Input id={`${mode}-email`} name="email" type="email" autoComplete="email" maxLength={255} required />
+                    <Input
+                      id={`${mode}-email`}
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      maxLength={255}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor={`${mode}-password`}>Password</Label>
@@ -179,7 +190,6 @@ function AuthPage() {
                     </button>
                   )}
                 </form>
-
               </TabsContent>
             ))}
           </Tabs>
@@ -190,7 +200,12 @@ function AuthPage() {
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <Button variant="outline" className="w-full" disabled={busy} onClick={() => void google()}>
+          <Button
+            variant="outline"
+            className="w-full"
+            disabled={busy}
+            onClick={() => void google()}
+          >
             Continue with Google
           </Button>
         </div>

@@ -11,11 +11,15 @@ import { company, services, industries } from "@/data/site";
 const columns = [
   {
     title: "Services",
-    links: services.slice(0, 6).map((s) => ({ label: s.title, to: "/services/$slug", params: { slug: s.slug } })),
+    links: services
+      .slice(0, 6)
+      .map((s) => ({ label: s.title, to: "/services/$slug", params: { slug: s.slug } })),
   },
   {
     title: "Industries",
-    links: industries.slice(0, 6).map((i) => ({ label: i.name, to: "/industries/$slug", params: { slug: i.slug } })),
+    links: industries
+      .slice(0, 6)
+      .map((i) => ({ label: i.name, to: "/industries/$slug", params: { slug: i.slug } })),
   },
 ] as const;
 
@@ -24,7 +28,9 @@ const companyLinks = [
   { label: "Case Studies", to: "/case-studies" },
   { label: "Insights", to: "/insights" },
   { label: "Careers", to: "/careers" },
-  { label: "Contact", to: "/contact" },
+  { label: "Start a Project", to: "/start-a-project" },
+  { label: "Scale Your Team", to: "/scale-your-team" },
+  { label: "Contact Kalvoteq", to: "/contact" },
 ] as const;
 
 const legalLinks = [
@@ -82,11 +88,17 @@ export function Footer() {
 
         {columns.map((col) => (
           <div key={col.title}>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{col.title}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+              {col.title}
+            </p>
             <ul className="mt-4 space-y-2.5">
               {col.links.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} params={l.params} className="text-sm text-ink-muted transition-colors hover:text-ink-foreground">
+                  <Link
+                    to={l.to}
+                    params={l.params}
+                    className="text-sm text-ink-muted transition-colors hover:text-ink-foreground"
+                  >
                     {l.label}
                   </Link>
                 </li>
@@ -96,11 +108,16 @@ export function Footer() {
         ))}
 
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">Company</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+            Company
+          </p>
           <ul className="mt-4 space-y-2.5">
             {companyLinks.map((l) => (
               <li key={l.to}>
-                <Link to={l.to} className="text-sm text-ink-muted transition-colors hover:text-ink-foreground">
+                <Link
+                  to={l.to}
+                  className="text-sm text-ink-muted transition-colors hover:text-ink-foreground"
+                >
                   {l.label}
                 </Link>
               </li>

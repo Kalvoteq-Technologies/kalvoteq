@@ -45,7 +45,8 @@ function AccountPage() {
       toast.success("Profile updated");
       await queryClient.invalidateQueries({ queryKey: ["profile", "mine", user?.id] });
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save your profile"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "Could not save your profile"),
   });
 
   return (
@@ -95,7 +96,9 @@ function AccountPage() {
             <h2 className="text-sm font-semibold">Account</h2>
             <p className="mt-3 break-words text-muted-foreground">{user?.email}</p>
             <p className="mt-2 text-muted-foreground">
-              {roles.length ? roles.map((r) => ROLE_LABELS[r]).join(" · ") : "No access granted yet"}
+              {roles.length
+                ? roles.map((r) => ROLE_LABELS[r]).join(" · ")
+                : "No access granted yet"}
             </p>
           </aside>
         </div>

@@ -73,7 +73,8 @@ export const ONBOARDING_TRACKS: Record<WelcomeRole, OnboardingTrack> = {
       {
         id: "company",
         title: "Complete your company profile",
-        description: "Add company details and billing information so we can tailor your engagement.",
+        description:
+          "Add company details and billing information so we can tailor your engagement.",
         to: "/portal-profile",
         ctaLabel: "Company profile",
       },
@@ -123,13 +124,15 @@ export const ONBOARDING_TRACKS: Record<WelcomeRole, OnboardingTrack> = {
   },
   member: {
     headline: "Welcome to kalvoteq",
-    intro: "Your account is active. Once an administrator assigns your role, the matching workspace unlocks.",
+    intro:
+      "Your account is active. Once an administrator assigns your role, the matching workspace unlocks.",
     steps: [
       ...accountSteps,
       {
         id: "wait",
         title: "Wait for your access level",
-        description: "An administrator assigns admin, client, or developer access. This page updates automatically.",
+        description:
+          "An administrator assigns admin, client, or developer access. This page updates automatically.",
         to: "/contact",
         ctaLabel: "Contact us",
       },
@@ -137,7 +140,8 @@ export const ONBOARDING_TRACKS: Record<WelcomeRole, OnboardingTrack> = {
   },
 };
 
-export const onboardingStorageKey = (userId: string, role: WelcomeRole) => `kalvoteq:onboarding:${role}:${userId}`;
+export const onboardingStorageKey = (userId: string, role: WelcomeRole) =>
+  `kalvoteq:onboarding:${role}:${userId}`;
 
 export function readCompleted(key: string): string[] {
   if (typeof window === "undefined") return [];

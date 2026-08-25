@@ -11,13 +11,21 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
-import { clientProfileSchema, myClientProfileQuery, saveClientProfile } from "@/lib/member-profiles";
+import {
+  clientProfileSchema,
+  myClientProfileQuery,
+  saveClientProfile,
+} from "@/lib/member-profiles";
 
 export const Route = createFileRoute("/_authenticated/_client/portal-profile")({
   head: () => ({
     meta: [
       { title: "Company details — kalvoteq client portal" },
-      { name: "description", content: "Share your company details so the kalvoteq delivery team can tailor your engagement." },
+      {
+        name: "description",
+        content:
+          "Share your company details so the kalvoteq delivery team can tailor your engagement.",
+      },
       { property: "og:title", content: "Company details — kalvoteq client portal" },
       { property: "og:description", content: "Complete your kalvoteq client profile." },
       { name: "robots", content: "noindex" },
@@ -65,10 +73,12 @@ function ClientProfilePage() {
       toast.success("Company details saved");
       await queryClient.invalidateQueries({ queryKey: ["client-profile", user?.id] });
     },
-    onError: (error) => toast.error(error instanceof Error ? error.message : "Could not save your details"),
+    onError: (error) =>
+      toast.error(error instanceof Error ? error.message : "Could not save your details"),
   });
 
-  const set = (key: keyof typeof empty) => (value: string) => setForm((prev) => ({ ...prev, [key]: value }));
+  const set = (key: keyof typeof empty) => (value: string) =>
+    setForm((prev) => ({ ...prev, [key]: value }));
 
   return (
     <>
@@ -80,43 +90,86 @@ function ClientProfilePage() {
       <Section>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
           <div className="space-y-8">
-          <CompanyLogoUpload userId={user?.id} logoPath={data?.logo_path} hasProfile={Boolean(data)} />
-          <form
-            className="space-y-5 rounded-xl border border-border bg-card p-7"
-            onSubmit={(e) => {
-              e.preventDefault();
-              save.mutate();
-            }}
-          >
-            <Field id="company_name" label="Company name" required value={form.company_name} onChange={set("company_name")} maxLength={120} />
-            <div className="grid gap-5 sm:grid-cols-2">
-              <Field id="website" label="Website" placeholder="https://" value={form.website} onChange={set("website")} maxLength={255} />
-              <Field id="industry" label="Industry" value={form.industry} onChange={set("industry")} maxLength={120} />
-              <Field id="company_size" label="Company size" placeholder="e.g. 50–200" value={form.company_size} onChange={set("company_size")} maxLength={60} />
-              <Field id="country" label="Country" value={form.country} onChange={set("country")} maxLength={80} />
-            </div>
-            <Field id="role_title" label="Your role" value={form.role_title} onChange={set("role_title")} maxLength={120} />
-            <div className="space-y-2">
-              <Label htmlFor="needs">What do you need help with?</Label>
-              <Textarea
-                id="needs"
-                rows={5}
-                maxLength={1000}
-                value={form.needs}
-                onChange={(e) => set("needs")(e.target.value)}
-                placeholder="Goals, current stack, timeline, and anything blocking you today."
+            <CompanyLogoUpload
+              userId={user?.id}
+              logoPath={data?.logo_path}
+              hasProfile={Boolean(data)}
+            />
+            <form
+              className="space-y-5 rounded-xl border border-border bg-card p-7"
+              onSubmit={(e) => {
+                e.preventDefault();
+                save.mutate();
+              }}
+            >
+              <Field
+                id="company_name"
+                label="Company name"
+                required
+                value={form.company_name}
+                onChange={set("company_name")}
+                maxLength={120}
               />
-              <p className="text-xs text-muted-foreground">{form.needs.length}/1000</p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Button type="submit" disabled={save.isPending || isLoading}>
-                {data ? "Save changes" : "Complete profile"}
-              </Button>
-              <Button asChild variant="ghost">
-                <Link to="/portal">Back to portal</Link>
-              </Button>
-            </div>
-          </form>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <Field
+                  id="website"
+                  label="Website"
+                  placeholder="https://"
+                  value={form.website}
+                  onChange={set("website")}
+                  maxLength={255}
+                />
+                <Field
+                  id="industry"
+                  label="Industry"
+                  value={form.industry}
+                  onChange={set("industry")}
+                  maxLength={120}
+                />
+                <Field
+                  id="company_size"
+                  label="Company size"
+                  placeholder="e.g. 50–200"
+                  value={form.company_size}
+                  onChange={set("company_size")}
+                  maxLength={60}
+                />
+                <Field
+                  id="country"
+                  label="Country"
+                  value={form.country}
+                  onChange={set("country")}
+                  maxLength={80}
+                />
+              </div>
+              <Field
+                id="role_title"
+                label="Your role"
+                value={form.role_title}
+                onChange={set("role_title")}
+                maxLength={120}
+              />
+              <div className="space-y-2">
+                <Label htmlFor="needs">What do you need help with?</Label>
+                <Textarea
+                  id="needs"
+                  rows={5}
+                  maxLength={1000}
+                  value={form.needs}
+                  onChange={(e) => set("needs")(e.target.value)}
+                  placeholder="Goals, current stack, timeline, and anything blocking you today."
+                />
+                <p className="text-xs text-muted-foreground">{form.needs.length}/1000</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Button type="submit" disabled={save.isPending || isLoading}>
+                  {data ? "Save changes" : "Complete profile"}
+                </Button>
+                <Button asChild variant="ghost">
+                  <Link to="/portal">Back to portal</Link>
+                </Button>
+              </div>
+            </form>
           </div>
 
           <aside className="h-fit rounded-xl border border-border bg-surface p-6">
@@ -155,7 +208,14 @@ function Field({
   return (
     <div className="space-y-2">
       <Label htmlFor={id}>{label}</Label>
-      <Input id={id} value={value} required={required} placeholder={placeholder} maxLength={maxLength} onChange={(e) => onChange(e.target.value)} />
+      <Input
+        id={id}
+        value={value}
+        required={required}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        onChange={(e) => onChange(e.target.value)}
+      />
     </div>
   );
 }

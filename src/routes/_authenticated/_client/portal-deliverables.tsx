@@ -13,7 +13,10 @@ export const Route = createFileRoute("/_authenticated/_client/portal-deliverable
   head: () => ({
     meta: [
       { title: "Deliverables — kalvoteq client portal" },
-      { name: "description", content: "Reports, documents and artefacts shared with you by your kalvoteq delivery team." },
+      {
+        name: "description",
+        content: "Reports, documents and artefacts shared with you by your kalvoteq delivery team.",
+      },
       { property: "og:title", content: "Deliverables — kalvoteq client portal" },
       { property: "og:description", content: "Everything your delivery team has shared with you." },
       { name: "robots", content: "noindex" },
@@ -66,7 +69,9 @@ function DeliverablesPage() {
           <div className="rounded-xl border border-dashed border-border p-16 text-center">
             <FileText className="mx-auto h-6 w-6 text-muted-foreground" aria-hidden="true" />
             <p className="mt-4 font-semibold">Nothing shared yet</p>
-            <p className="mt-2 text-sm text-muted-foreground">New deliverables appear here as your engagement progresses.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              New deliverables appear here as your engagement progresses.
+            </p>
           </div>
         ) : (
           <ul className="divide-y divide-border rounded-xl border border-border bg-card">
@@ -78,7 +83,9 @@ function DeliverablesPage() {
                     {projectName(d.project_id)} · {formatDate(d.created_at)}
                     {d.file_name ? ` · ${d.file_name} ${formatSize(d.size_bytes)}` : ""}
                   </p>
-                  {d.description && <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{d.description}</p>}
+                  {d.description && (
+                    <p className="mt-2 max-w-2xl text-sm text-muted-foreground">{d.description}</p>
+                  )}
                 </div>
                 {d.file_path && (
                   <Button
@@ -87,7 +94,8 @@ function DeliverablesPage() {
                     disabled={busy === d.id}
                     onClick={() => open(d.file_path!, d.id)}
                   >
-                    <Download className="mr-1.5 h-4 w-4" /> {busy === d.id ? "Opening…" : "Download"}
+                    <Download className="mr-1.5 h-4 w-4" />{" "}
+                    {busy === d.id ? "Opening…" : "Download"}
                   </Button>
                 )}
               </li>

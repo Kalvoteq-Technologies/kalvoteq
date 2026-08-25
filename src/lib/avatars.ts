@@ -44,7 +44,9 @@ async function toSquarePng(file: File): Promise<Blob> {
   ctx.drawImage(bitmap, sx, sy, side, side, 0, 0, target, target);
   bitmap.close?.();
 
-  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png", 0.92));
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, "image/png", 0.92),
+  );
   if (!blob) throw new Error("Could not process that image");
   return blob;
 }
@@ -63,7 +65,11 @@ export async function uploadAvatar(userId: string, file: File): Promise<string> 
     .upload(path, square, { cacheControl: "3600", upsert: false, contentType: "image/png" });
   if (uploadError) throw uploadError;
 
-  const { data: existing } = await supabase.from("profiles").select("avatar_url").eq("id", userId).maybeSingle();
+  const { data: existing } = await supabase
+    .from("profiles")
+    .select("avatar_url")
+    .eq("id", userId)
+    .maybeSingle();
 
   const { error } = await supabase.from("profiles").update({ avatar_url: path }).eq("id", userId);
   if (error) {
@@ -88,7 +94,10 @@ export async function saveDisplayName(userId: string, displayName: string): Prom
   const trimmed = displayName.trim();
   if (trimmed.length < 2) throw new Error("Enter at least 2 characters");
   if (trimmed.length > 80) throw new Error("Keep your name under 80 characters");
-  const { error } = await supabase.from("profiles").update({ display_name: trimmed }).eq("id", userId);
+  const { error } = await supabase
+    .from("profiles")
+    .update({ display_name: trimmed })
+    .eq("id", userId);
   if (error) throw error;
 }
 
@@ -107,7 +116,10 @@ export const avatarUrlQuery = (path: string | null | undefined) =>
     queryFn: () => getAvatarUrl(path!),
   });
 
-export function initialsFrom(name: string | null | undefined, email: string | null | undefined): string {
+export function initialsFrom(
+  name: string | null | undefined,
+  email: string | null | undefined,
+): string {
   const source = (name ?? "").trim() || (email ?? "").split("@")[0] || "";
   const parts = source.split(/[\s._-]+/).filter(Boolean);
   const letters = parts.slice(0, 2).map((p) => p[0]!);

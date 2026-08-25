@@ -17,11 +17,18 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden border-b border-border bg-surface">
-      <div className="pointer-events-none absolute inset-0 grid-lines opacity-60" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 grid-lines opacity-60"
+        aria-hidden="true"
+      />
       <div className="container-page relative py-20 lg:py-28">
         <p className="eyebrow">{eyebrow}</p>
-        <h1 className="mt-4 max-w-4xl text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">{title}</h1>
-        {intro && <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">{intro}</p>}
+        <h1 className="mt-4 max-w-4xl text-4xl font-bold leading-[1.05] sm:text-5xl lg:text-6xl">
+          {title}
+        </h1>
+        {intro && (
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">{intro}</p>
+        )}
         {children && <div className="mt-8">{children}</div>}
       </div>
     </section>
@@ -35,6 +42,7 @@ export function Section({
   children,
   className,
   muted,
+  id,
 }: {
   eyebrow?: string;
   title?: string;
@@ -42,9 +50,10 @@ export function Section({
   children: ReactNode;
   className?: string;
   muted?: boolean;
+  id?: string;
 }) {
   return (
-    <section className={cn("section-y", muted && "bg-surface", className)}>
+    <section id={id} className={cn("section-y", muted && "bg-surface", className)}>
       <div className="container-page">
         {(eyebrow || title) && (
           <div className="max-w-3xl">
@@ -62,9 +71,17 @@ export function Section({
 export function CTASection({
   title = "Let's build your next digital product",
   text = "Tell us what you are trying to ship. We will come back within one business day with a route to get there.",
+  primaryLabel = "Start a Project",
+  primaryTo = "/start-a-project",
+  secondaryLabel = "Talk to an Expert",
+  secondaryTo = "/contact",
 }: {
   title?: string;
   text?: string;
+  primaryLabel?: string;
+  primaryTo?: string;
+  secondaryLabel?: string;
+  secondaryTo?: string;
 }) {
   return (
     <section className="section-y bg-ink text-ink-foreground">
@@ -75,7 +92,7 @@ export function CTASection({
         </div>
         <div className="flex flex-wrap gap-3">
           <Button asChild size="lg">
-            <Link to="/contact">Book consultation</Link>
+            <Link to={primaryTo}>{primaryLabel}</Link>
           </Button>
           <Button
             asChild
@@ -83,9 +100,7 @@ export function CTASection({
             variant="outline"
             className="border-white/25 bg-transparent text-ink-foreground hover:bg-white/10 hover:text-ink-foreground"
           >
-            <Link to="/services/$slug" params={{ slug: "dedicated-teams" }}>
-              Hire developers
-            </Link>
+            <Link to={secondaryTo}>{secondaryLabel}</Link>
           </Button>
         </div>
       </div>

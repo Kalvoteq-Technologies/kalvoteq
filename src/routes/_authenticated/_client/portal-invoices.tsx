@@ -6,13 +6,22 @@ import { PageHero, Section } from "@/components/site/Primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { formatDate, formatMoney, INVOICE_STATUS_LABELS, myInvoicesQuery, myProjectsQuery } from "@/lib/portal";
+import {
+  formatDate,
+  formatMoney,
+  INVOICE_STATUS_LABELS,
+  myInvoicesQuery,
+  myProjectsQuery,
+} from "@/lib/portal";
 
 export const Route = createFileRoute("/_authenticated/_client/portal-invoices")({
   head: () => ({
     meta: [
       { title: "Invoices — kalvoteq client portal" },
-      { name: "description", content: "Review issued, paid and outstanding invoices for your kalvoteq engagement." },
+      {
+        name: "description",
+        content: "Review issued, paid and outstanding invoices for your kalvoteq engagement.",
+      },
       { property: "og:title", content: "Invoices — kalvoteq client portal" },
       { property: "og:description", content: "Your engagement invoices in one place." },
       { name: "robots", content: "noindex" },
@@ -36,7 +45,11 @@ function InvoicesPage() {
       <PageHero
         eyebrow="Client portal"
         title="Invoices"
-        intro={outstanding > 0 ? `${formatMoney(outstanding, currency)} currently outstanding.` : "Everything issued for your engagement."}
+        intro={
+          outstanding > 0
+            ? `${formatMoney(outstanding, currency)} currently outstanding.`
+            : "Everything issued for your engagement."
+        }
       >
         <Button asChild variant="outline">
           <Link to="/portal">Back to portal</Link>
@@ -53,7 +66,10 @@ function InvoicesPage() {
         ) : (
           <ul className="divide-y divide-border rounded-xl border border-border bg-card">
             {invoices.map((invoice) => (
-              <li key={invoice.id} className="flex flex-wrap items-center justify-between gap-4 p-6">
+              <li
+                key={invoice.id}
+                className="flex flex-wrap items-center justify-between gap-4 p-6"
+              >
                 <div>
                   <p className="font-semibold">
                     {invoice.number}
@@ -66,11 +82,23 @@ function InvoicesPage() {
                   <p className="mt-1 text-sm text-muted-foreground">
                     Issued {formatDate(invoice.issued_on)} · Due {formatDate(invoice.due_on)}
                   </p>
-                  {invoice.description && <p className="mt-2 text-sm text-muted-foreground">{invoice.description}</p>}
+                  {invoice.description && (
+                    <p className="mt-2 text-sm text-muted-foreground">{invoice.description}</p>
+                  )}
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-lg font-semibold">{formatMoney(invoice.amount_cents, invoice.currency)}</span>
-                  <Badge variant={invoice.status === "paid" ? "secondary" : invoice.status === "overdue" ? "destructive" : "default"}>
+                  <span className="text-lg font-semibold">
+                    {formatMoney(invoice.amount_cents, invoice.currency)}
+                  </span>
+                  <Badge
+                    variant={
+                      invoice.status === "paid"
+                        ? "secondary"
+                        : invoice.status === "overdue"
+                          ? "destructive"
+                          : "default"
+                    }
+                  >
                     {INVOICE_STATUS_LABELS[invoice.status]}
                   </Badge>
                 </div>

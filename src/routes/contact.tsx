@@ -18,23 +18,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { company, faqs, services } from "@/data/site";
+import { faqJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact kalvoteq — Book a Consultation" },
+      { title: "Contact kalvoteq — Talk to an Expert" },
       {
         name: "description",
-        content: "Talk to our engineering leadership in Tallinn. We reply to every enquiry within one business day.",
+        content:
+          "Talk to our engineering leadership in Tallinn. We reply to every enquiry within one business day.",
       },
-      { property: "og:title", content: "Contact kalvoteq — Book a Consultation" },
-      { property: "og:description", content: "Offices in Tallinn, Estonia. Delivery worldwide." },
+      { property: "og:title", content: "Contact kalvoteq — Talk to an Expert" },
+      { property: "og:description", content: "Headquartered in Tallinn, Estonia." },
       { property: "og:url", content: "/contact" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(faqs)) }],
   }),
   component: ContactPage,
 });
@@ -50,12 +59,19 @@ const contactSchema = z.object({
 function ContactForm() {
   const submitEnquiry = useServerFn(submitContactEnquiry);
 
-  const [values, setValues] = useState({ name: "", email: "", companyName: "", interest: "", message: "" });
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    companyName: "",
+    interest: "",
+    message: "",
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
-  const update = (key: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setValues((v) => ({ ...v, [key]: e.target.value }));
+  const update =
+    (key: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setValues((v) => ({ ...v, [key]: e.target.value }));
 
   return (
     <form
@@ -82,7 +98,6 @@ function ContactForm() {
           })
           .finally(() => setSubmitting(false));
       }}
-
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
@@ -92,19 +107,35 @@ function ContactForm() {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="email">Work email</Label>
-          <Input id="email" type="email" value={values.email} onChange={update("email")} maxLength={255} />
+          <Input
+            id="email"
+            type="email"
+            value={values.email}
+            onChange={update("email")}
+            maxLength={255}
+          />
           {errors["email"] && <p className="text-sm text-destructive">{errors["email"]}</p>}
         </div>
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
           <Label htmlFor="companyName">Company</Label>
-          <Input id="companyName" value={values.companyName} onChange={update("companyName")} maxLength={120} />
-          {errors["companyName"] && <p className="text-sm text-destructive">{errors["companyName"]}</p>}
+          <Input
+            id="companyName"
+            value={values.companyName}
+            onChange={update("companyName")}
+            maxLength={120}
+          />
+          {errors["companyName"] && (
+            <p className="text-sm text-destructive">{errors["companyName"]}</p>
+          )}
         </div>
         <div className="grid gap-2">
           <Label htmlFor="interest">What do you need?</Label>
-          <Select value={values.interest} onValueChange={(v) => setValues((prev) => ({ ...prev, interest: v }))}>
+          <Select
+            value={values.interest}
+            onValueChange={(v) => setValues((prev) => ({ ...prev, interest: v }))}
+          >
             <SelectTrigger id="interest">
               <SelectValue placeholder="Select a service" />
             </SelectTrigger>
@@ -122,7 +153,13 @@ function ContactForm() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="message">Project context</Label>
-        <Textarea id="message" rows={6} value={values.message} onChange={update("message")} maxLength={2000} />
+        <Textarea
+          id="message"
+          rows={6}
+          value={values.message}
+          onChange={update("message")}
+          maxLength={2000}
+        />
         {errors["message"] && <p className="text-sm text-destructive">{errors["message"]}</p>}
       </div>
       <div>
@@ -160,13 +197,19 @@ function ContactPage() {
                 </li>
                 <li className="flex gap-3">
                   <Mail className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href={`mailto:${company.email}`} className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href={`mailto:${company.email}`}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     {company.email}
                   </a>
                 </li>
                 <li className="flex gap-3">
                   <Phone className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href={`tel:${company.phone.replace(/\s/g, "")}`} className="text-muted-foreground hover:text-foreground">
+                  <a
+                    href={`tel:${company.phone.replace(/\s/g, "")}`}
+                    className="text-muted-foreground hover:text-foreground"
+                  >
                     {company.phone}
                   </a>
                 </li>
@@ -199,14 +242,16 @@ function ContactPage() {
               <Calendar className="h-5 w-5 text-primary" aria-hidden="true" />
               <h2 className="mt-3 font-semibold">Prefer a call?</h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Book a 30-minute call with an engineer — no sales script, just a technical conversation
-                about scope, architecture and timelines. We confirm a slot within one business day.
+                Book a 30-minute call with an engineer — no sales script, just a technical
+                conversation about scope, architecture and timelines. We confirm a slot within one
+                business day.
               </p>
               <Button variant="outline" className="mt-4" asChild>
-                <a href={`mailto:${company.email}?subject=Consultation%20request`}>Request a slot</a>
+                <a href={`mailto:${company.email}?subject=Consultation%20request`}>
+                  Request a slot
+                </a>
               </Button>
             </div>
-
           </div>
         </div>
       </Section>

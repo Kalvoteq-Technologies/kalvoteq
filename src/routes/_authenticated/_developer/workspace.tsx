@@ -11,7 +11,11 @@ export const Route = createFileRoute("/_authenticated/_developer/workspace")({
   head: () => ({
     meta: [
       { title: "Developer workspace — kalvoteq" },
-      { name: "description", content: "Assignments, delivery notes, and engineering standards for the kalvoteq delivery team." },
+      {
+        name: "description",
+        content:
+          "Assignments, delivery notes, and engineering standards for the kalvoteq delivery team.",
+      },
       { property: "og:title", content: "Developer workspace — kalvoteq" },
       { property: "og:description", content: "Assignments and engineering standards." },
       { name: "robots", content: "noindex" },
@@ -21,9 +25,21 @@ export const Route = createFileRoute("/_authenticated/_developer/workspace")({
 });
 
 const cards = [
-  { icon: GitBranch, title: "Assignments", text: "Current engagement, squad, and the scope you own this sprint." },
-  { icon: Terminal, title: "Engineering standards", text: "Architecture guardrails, review checklists, and the delivery playbook." },
-  { icon: PenLine, title: "Write it up", text: "Turn a hard-won lesson into an insights article for the archive." },
+  {
+    icon: GitBranch,
+    title: "Assignments",
+    text: "Current engagement, squad, and the scope you own this sprint.",
+  },
+  {
+    icon: Terminal,
+    title: "Engineering standards",
+    text: "Architecture guardrails, review checklists, and the delivery playbook.",
+  },
+  {
+    icon: PenLine,
+    title: "Write it up",
+    text: "Turn a hard-won lesson into an insights article for the archive.",
+  },
 ];
 
 function DeveloperWorkspace() {
@@ -43,7 +59,8 @@ function DeveloperWorkspace() {
             <div>
               <h2 className="text-lg font-semibold">Finish setting up your engineer profile</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Add your skills, availability, and links so delivery leads can staff you on the right engagements.
+                Add your skills, availability, and links so delivery leads can staff you on the
+                right engagements.
               </p>
             </div>
             <Button asChild>
@@ -57,13 +74,17 @@ function DeveloperWorkspace() {
               <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
               <h2 className="mt-4 text-lg font-semibold">{title}</h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
-              <p className="mt-4 text-xs uppercase tracking-wider text-muted-foreground">Coming soon</p>
+              <p className="mt-4 text-xs uppercase tracking-wider text-muted-foreground">
+                Coming soon
+              </p>
             </div>
           ))}
         </div>
         <div className="mt-10 flex flex-wrap gap-3">
           <Button asChild variant="outline">
-            <Link to="/workspace-profile">{profile ? "Edit engineer details" : "Engineer details"}</Link>
+            <Link to="/workspace-profile">
+              {profile ? "Edit engineer details" : "Engineer details"}
+            </Link>
           </Button>
           {isAdmin && (
             <Button asChild>

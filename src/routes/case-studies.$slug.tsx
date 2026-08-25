@@ -3,7 +3,8 @@ import { Quote } from "lucide-react";
 
 import { CTASection, PageHero, Section } from "@/components/site/Primitives";
 import { Badge } from "@/components/ui/badge";
-import { caseStudies, type CaseStudy } from "@/data/site";
+import { caseStudies, caseStudyTypeLabel, type CaseStudy } from "@/data/site";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/case-studies/$slug")({
   loader: ({ params }) => {
@@ -13,7 +14,12 @@ export const Route = createFileRoute("/case-studies/$slug")({
   },
   head: ({ loaderData, params }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Case study not found — kalvoteq" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Case study not found — kalvoteq" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     }
     const { study } = loaderData;
     return {
@@ -26,6 +32,18 @@ export const Route = createFileRoute("/case-studies/$slug")({
         { property: "og:url", content: `/case-studies/${params.slug}` },
       ],
       links: [{ rel: "canonical", href: `/case-studies/${params.slug}` }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(
+            breadcrumbJsonLd([
+              { name: "Home", url: "/" },
+              { name: "Case Studies", url: "/case-studies" },
+              { name: study.title, url: `/case-studies/${params.slug}` },
+            ]),
+          ),
+        },
+      ],
     };
   },
   component: CaseStudyDetail,
@@ -38,6 +56,9 @@ function CaseStudyDetail() {
   return (
     <>
       <PageHero eyebrow={study.sector} title={study.title} intro={study.client}>
+        <Badge variant="outline" className="mb-4 font-normal">
+          {caseStudyTypeLabel[study.type]}
+        </Badge>
         <nav aria-label="Breadcrumb" className="text-sm text-muted-foreground">
           <Link to="/" className="hover:text-foreground">
             Home
@@ -56,11 +77,15 @@ function CaseStudyDetail() {
           <div className="space-y-10">
             <div>
               <h2 className="text-xl font-semibold">The problem</h2>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">{study.problem}</p>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                {study.problem}
+              </p>
             </div>
             <div>
               <h2 className="text-xl font-semibold">What we did</h2>
-              <p className="mt-3 text-base leading-relaxed text-muted-foreground">{study.solution}</p>
+              <p className="mt-3 text-base leading-relaxed text-muted-foreground">
+                {study.solution}
+              </p>
             </div>
             <figure className="rounded-xl border border-border bg-surface p-8">
               <Quote className="h-6 w-6 text-primary" aria-hidden="true" />
@@ -92,7 +117,10 @@ function CaseStudyDetail() {
               <p className="eyebrow">Results</p>
               <dl className="mt-3 space-y-3">
                 {study.results.map((r) => (
-                  <div key={r.label} className="flex items-baseline justify-between gap-4 border-b border-border pb-2">
+                  <div
+                    key={r.label}
+                    className="flex items-baseline justify-between gap-4 border-b border-border pb-2"
+                  >
                     <dt className="text-sm text-muted-foreground">{r.label}</dt>
                     <dd className="font-display font-bold">{r.value}</dd>
                   </div>

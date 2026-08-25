@@ -21,7 +21,10 @@ export const Route = createFileRoute("/insights/")({
           "Practical writing on architecture, cloud economics, applied AI, design systems, and building engineering teams in Europe.",
       },
       { property: "og:title", content: "Insights — Engineering Notes from kalvoteq" },
-      { property: "og:description", content: "Field notes from delivery, written by the engineers doing the work." },
+      {
+        property: "og:description",
+        content: "Field notes from delivery, written by the engineers doing the work.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -37,7 +40,12 @@ function InsightsPage() {
   const [email, setEmail] = useState("");
 
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(posts.map((p) => p.categories?.name).filter((n): n is string => Boolean(n))))],
+    () => [
+      "All",
+      ...Array.from(
+        new Set(posts.map((p) => p.categories?.name).filter((n): n is string => Boolean(n))),
+      ),
+    ],
     [posts],
   );
 
@@ -46,7 +54,8 @@ function InsightsPage() {
       posts.filter((p) => {
         const matchesCategory = category === "All" || p.categories?.name === category;
         const q = query.trim().toLowerCase();
-        const matchesQuery = !q || p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q);
+        const matchesQuery =
+          !q || p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q);
         return matchesCategory && matchesQuery;
       }),
     [posts, query, category],
@@ -69,7 +78,10 @@ function InsightsPage() {
       <Section>
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full max-w-sm">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            <Search
+              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
             <Input
               aria-label="Search articles"
               placeholder="Search articles"
@@ -88,7 +100,9 @@ function InsightsPage() {
                 aria-pressed={category === c}
                 className={cn(
                   "rounded-full border border-border px-3.5 py-1.5 text-sm transition-colors",
-                  category === c ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+                  category === c
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {c}
@@ -102,7 +116,9 @@ function InsightsPage() {
         ) : filtered.length === 0 ? (
           <div className="mt-12 rounded-xl border border-dashed border-border p-16 text-center">
             <p className="font-semibold">No articles match that search</p>
-            <p className="mt-2 text-sm text-muted-foreground">Try a different keyword or clear the category filter.</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Try a different keyword or clear the category filter.
+            </p>
             <Button
               variant="outline"
               className="mt-6"
@@ -117,7 +133,10 @@ function InsightsPage() {
         ) : (
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filtered.map((post) => (
-              <article key={post.id} className="flex flex-col overflow-hidden rounded-xl border border-border bg-card card-hover">
+              <article
+                key={post.id}
+                className="flex flex-col overflow-hidden rounded-xl border border-border bg-card card-hover"
+              >
                 {post.cover_image_url && (
                   <Link to="/insights/$slug" params={{ slug: post.slug }}>
                     <img
@@ -135,15 +154,24 @@ function InsightsPage() {
                     </Badge>
                   )}
                   <h2 className="mt-4 text-lg font-semibold leading-snug">
-                    <Link to="/insights/$slug" params={{ slug: post.slug }} className="hover:text-primary">
+                    <Link
+                      to="/insights/$slug"
+                      params={{ slug: post.slug }}
+                      className="hover:text-primary"
+                    >
                       {post.title}
                     </Link>
                   </h2>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                    {post.excerpt}
+                  </p>
                   {postTags(post).length > 0 && (
                     <div className="mt-4 flex flex-wrap gap-1.5">
                       {postTags(post).map((t) => (
-                        <span key={t.id} className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground">
+                        <span
+                          key={t.id}
+                          className="rounded-full border border-border px-2 py-0.5 text-xs text-muted-foreground"
+                        >
                           {t.name}
                         </span>
                       ))}
@@ -152,7 +180,11 @@ function InsightsPage() {
                   <div className="mt-6 flex items-center gap-4 border-t border-border pt-4 text-xs text-muted-foreground">
                     {post.published_at && (
                       <time dateTime={post.published_at}>
-                        {new Date(post.published_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                        {new Date(post.published_at).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
                       </time>
                     )}
                     {post.reading_time && (

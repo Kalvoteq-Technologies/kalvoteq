@@ -52,7 +52,9 @@ export function RichTextEditor({ value, onChange, userId }: Props) {
   });
 
   if (!editor) {
-    return <div className="min-h-[420px] rounded-xl border border-border bg-card" aria-busy="true" />;
+    return (
+      <div className="min-h-[420px] rounded-xl border border-border bg-card" aria-busy="true" />
+    );
   }
 
   async function handleImage(file: File) {
@@ -80,10 +82,20 @@ export function RichTextEditor({ value, onChange, userId }: Props) {
   return (
     <div className="overflow-hidden rounded-xl border border-border bg-card">
       <div className="flex flex-wrap items-center gap-1 border-b border-border px-3 py-2">
-        <button type="button" aria-label="Bold" className={tool(editor.isActive("bold"))} onClick={() => editor.chain().focus().toggleBold().run()}>
+        <button
+          type="button"
+          aria-label="Bold"
+          className={tool(editor.isActive("bold"))}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        >
           <Bold className="h-4 w-4" />
         </button>
-        <button type="button" aria-label="Italic" className={tool(editor.isActive("italic"))} onClick={() => editor.chain().focus().toggleItalic().run()}>
+        <button
+          type="button"
+          aria-label="Italic"
+          className={tool(editor.isActive("italic"))}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        >
           <Italic className="h-4 w-4" />
         </button>
         <button
@@ -102,7 +114,12 @@ export function RichTextEditor({ value, onChange, userId }: Props) {
         >
           <Heading3 className="h-4 w-4" />
         </button>
-        <button type="button" aria-label="Bullet list" className={tool(editor.isActive("bulletList"))} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+        <button
+          type="button"
+          aria-label="Bullet list"
+          className={tool(editor.isActive("bulletList"))}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+        >
           <List className="h-4 w-4" />
         </button>
         <button
@@ -113,10 +130,20 @@ export function RichTextEditor({ value, onChange, userId }: Props) {
         >
           <ListOrdered className="h-4 w-4" />
         </button>
-        <button type="button" aria-label="Quote" className={tool(editor.isActive("blockquote"))} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+        <button
+          type="button"
+          aria-label="Quote"
+          className={tool(editor.isActive("blockquote"))}
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        >
           <Quote className="h-4 w-4" />
         </button>
-        <button type="button" aria-label="Code block" className={tool(editor.isActive("codeBlock"))} onClick={() => editor.chain().focus().toggleCodeBlock().run()}>
+        <button
+          type="button"
+          aria-label="Code block"
+          className={tool(editor.isActive("codeBlock"))}
+          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        >
           <Code className="h-4 w-4" />
         </button>
         <button
@@ -137,7 +164,13 @@ export function RichTextEditor({ value, onChange, userId }: Props) {
           <LinkIcon className="h-4 w-4" />
         </button>
         <span className="mx-1 h-5 w-px bg-border" />
-        <Button type="button" size="sm" variant="ghost" disabled={uploading} onClick={() => fileInput.current?.click()}>
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          disabled={uploading}
+          onClick={() => fileInput.current?.click()}
+        >
           <ImagePlus className="mr-1.5 h-4 w-4" />
           {uploading ? "Uploading…" : "Image"}
         </Button>
@@ -153,10 +186,20 @@ export function RichTextEditor({ value, onChange, userId }: Props) {
           }}
         />
         <span className="ml-auto flex gap-1">
-          <button type="button" aria-label="Undo" className={tool(false)} onClick={() => editor.chain().focus().undo().run()}>
+          <button
+            type="button"
+            aria-label="Undo"
+            className={tool(false)}
+            onClick={() => editor.chain().focus().undo().run()}
+          >
             <Undo2 className="h-4 w-4" />
           </button>
-          <button type="button" aria-label="Redo" className={tool(false)} onClick={() => editor.chain().focus().redo().run()}>
+          <button
+            type="button"
+            aria-label="Redo"
+            className={tool(false)}
+            onClick={() => editor.chain().focus().redo().run()}
+          >
             <Redo2 className="h-4 w-4" />
           </button>
         </span>

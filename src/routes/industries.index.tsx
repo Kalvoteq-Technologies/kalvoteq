@@ -11,10 +11,13 @@ export const Route = createFileRoute("/industries/")({
       {
         name: "description",
         content:
-          "Healthcare, finance, logistics, retail, government, manufacturing, education, and energy — software engineering with domain context.",
+          "FinTech, healthcare, logistics, retail, manufacturing, education, public sector, and energy — software engineering with domain context.",
       },
       { property: "og:title", content: "Industries We Serve — kalvoteq" },
-      { property: "og:description", content: "Regulated, high-volume, and mission-critical environments across eight sectors." },
+      {
+        property: "og:description",
+        content: "Regulated, high-volume, and mission-critical environments across eight sectors.",
+      },
       { property: "og:url", content: "/industries" },
     ],
     links: [{ rel: "canonical", href: "/industries" }],
@@ -42,8 +45,8 @@ function IndustriesIndex() {
               <h2 className="text-xl font-semibold">{industry.name}</h2>
               <p className="mt-2 text-sm text-muted-foreground">{industry.blurb}</p>
               <ul className="mt-5 space-y-1.5 text-sm text-muted-foreground">
-                {industry.outcomes.slice(0, 2).map((o) => (
-                  <li key={o}>— {o}</li>
+                {industry.capabilities.slice(0, 2).map((c) => (
+                  <li key={c}>— {c}</li>
                 ))}
               </ul>
               <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary">

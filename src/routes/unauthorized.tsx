@@ -13,9 +13,16 @@ export const Route = createFileRoute("/unauthorized")({
   head: () => ({
     meta: [
       { title: "Access required — kalvoteq" },
-      { name: "description", content: "This area of the kalvoteq platform needs an access level your account does not have yet." },
+      {
+        name: "description",
+        content:
+          "This area of the kalvoteq platform needs an access level your account does not have yet.",
+      },
       { property: "og:title", content: "Access required — kalvoteq" },
-      { property: "og:description", content: "Request access to this area of the kalvoteq platform." },
+      {
+        property: "og:description",
+        content: "Request access to this area of the kalvoteq platform.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),

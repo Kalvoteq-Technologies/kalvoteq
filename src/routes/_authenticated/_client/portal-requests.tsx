@@ -9,7 +9,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import {
@@ -27,7 +33,10 @@ export const Route = createFileRoute("/_authenticated/_client/portal-requests")(
   head: () => ({
     meta: [
       { title: "Requests — kalvoteq client portal" },
-      { name: "description", content: "Raise a request and message the kalvoteq engineers working on your product." },
+      {
+        name: "description",
+        content: "Raise a request and message the kalvoteq engineers working on your product.",
+      },
       { property: "og:title", content: "Requests — kalvoteq client portal" },
       { property: "og:description", content: "Raise and track support requests." },
       { name: "robots", content: "noindex" },
@@ -81,7 +90,11 @@ function RequestsPage() {
 
   return (
     <>
-      <PageHero eyebrow="Client portal" title="Requests" intro="Ask a question, flag an issue, or request a change. Your delivery team replies in the thread.">
+      <PageHero
+        eyebrow="Client portal"
+        title="Requests"
+        intro="Ask a question, flag an issue, or request a change. Your delivery team replies in the thread."
+      >
         <Button asChild variant="outline">
           <Link to="/portal">Back to portal</Link>
         </Button>
@@ -100,19 +113,38 @@ function RequestsPage() {
             <div className="mt-6 space-y-5">
               <div>
                 <Label htmlFor="subject">Subject</Label>
-                <Input id="subject" value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={160} className="mt-2" />
-                {errors["subject"] && <p className="mt-1 text-sm text-destructive">{errors["subject"]}</p>}
+                <Input
+                  id="subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  maxLength={160}
+                  className="mt-2"
+                />
+                {errors["subject"] && (
+                  <p className="mt-1 text-sm text-destructive">{errors["subject"]}</p>
+                )}
               </div>
               <div>
                 <Label htmlFor="body">Details</Label>
-                <Textarea id="body" value={body} onChange={(e) => setBody(e.target.value)} rows={6} maxLength={4000} className="mt-2" />
-                {errors["body"] && <p className="mt-1 text-sm text-destructive">{errors["body"]}</p>}
+                <Textarea
+                  id="body"
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  rows={6}
+                  maxLength={4000}
+                  className="mt-2"
+                />
+                {errors["body"] && (
+                  <p className="mt-1 text-sm text-destructive">{errors["body"]}</p>
+                )}
               </div>
               <div className="grid gap-5 sm:grid-cols-2">
                 <div>
                   <Label>Priority</Label>
                   <Select value={priority} onValueChange={setPriority}>
-                    <SelectTrigger className="mt-2"><SelectValue /></SelectTrigger>
+                    <SelectTrigger className="mt-2">
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="low">Low</SelectItem>
                       <SelectItem value="normal">Normal</SelectItem>
@@ -123,11 +155,15 @@ function RequestsPage() {
                 <div>
                   <Label>Project</Label>
                   <Select value={projectId} onValueChange={setProjectId}>
-                    <SelectTrigger className="mt-2"><SelectValue placeholder="General" /></SelectTrigger>
+                    <SelectTrigger className="mt-2">
+                      <SelectValue placeholder="General" />
+                    </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="none">General</SelectItem>
                       {projects.map((p) => (
-                        <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                        <SelectItem key={p.id} value={p.id}>
+                          {p.name}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -163,7 +199,9 @@ function RequestsPage() {
                         {REQUEST_STATUS_LABELS[r.status]}
                       </Badge>
                     </div>
-                    <p className="mt-3 whitespace-pre-line text-sm text-muted-foreground">{r.body}</p>
+                    <p className="mt-3 whitespace-pre-line text-sm text-muted-foreground">
+                      {r.body}
+                    </p>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -226,8 +264,18 @@ export function Thread({ requestId }: { requestId: string }) {
         </ul>
       )}
       <div className="mt-4 flex gap-2">
-        <Textarea rows={2} value={text} onChange={(e) => setText(e.target.value)} placeholder="Write a reply…" />
-        <Button size="icon" disabled={send.isPending} onClick={() => send.mutate()} aria-label="Send message">
+        <Textarea
+          rows={2}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Write a reply…"
+        />
+        <Button
+          size="icon"
+          disabled={send.isPending}
+          onClick={() => send.mutate()}
+          aria-label="Send message"
+        >
           <Send className="h-4 w-4" />
         </Button>
       </div>

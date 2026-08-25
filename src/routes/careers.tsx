@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -10,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { openRoles } from "@/data/site";
+import { submitCareerApplication } from "@/lib/career-application.functions";
 
 export const Route = createFileRoute("/careers")({
   head: () => ({
@@ -17,10 +19,14 @@ export const Route = createFileRoute("/careers")({
       { title: "Careers at kalvoteq — Engineering Jobs in Europe" },
       {
         name: "description",
-        content: "Open engineering, design, and delivery roles in Tallinn and remote across the EU. Senior-first culture, transparent pay bands.",
+        content:
+          "Open engineering, design, and delivery roles in Tallinn and remote across the EU. Senior-first culture, transparent pay bands.",
       },
       { property: "og:title", content: "Careers at kalvoteq" },
-      { property: "og:description", content: "Join a senior-first software consulting firm headquartered in Estonia." },
+      {
+        property: "og:description",
+        content: "Join a senior-first software consulting firm headquartered in Estonia.",
+      },
       { property: "og:url", content: "/careers" },
     ],
     links: [{ rel: "canonical", href: "/careers" }],
@@ -36,12 +42,15 @@ const applicationSchema = z.object({
 });
 
 function ApplicationForm() {
+  const submitApplication = useServerFn(submitCareerApplication);
+
   const [values, setValues] = useState({ name: "", email: "", role: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
 
-  const update = (key: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setValues((v) => ({ ...v, [key]: e.target.value }));
+  const update =
+    (key: keyof typeof values) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setValues((v) => ({ ...v, [key]: e.target.value }));
 
   return (
     <form
@@ -57,11 +66,17 @@ function ApplicationForm() {
         }
         setErrors({});
         setSubmitting(true);
-        window.setTimeout(() => {
-          setSubmitting(false);
-          setValues({ name: "", email: "", role: "", message: "" });
-          toast.success("Application received. Our talent team replies within three working days.");
-        }, 600);
+        void submitApplication({ data: parsed.data })
+          .then(() => {
+            setValues({ name: "", email: "", role: "", message: "" });
+            toast.success(
+              "Application received. Our talent team replies within three working days.",
+            );
+          })
+          .catch(() => {
+            toast.error("Something went wrong. Please email hello@kalvoteq.com directly.");
+          })
+          .finally(() => setSubmitting(false));
       }}
       noValidate
     >
@@ -73,7 +88,13 @@ function ApplicationForm() {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="app-email">Email</Label>
-          <Input id="app-email" type="email" value={values.email} onChange={update("email")} maxLength={255} />
+          <Input
+            id="app-email"
+            type="email"
+            value={values.email}
+            onChange={update("email")}
+            maxLength={255}
+          />
           {errors["email"] && <p className="text-sm text-destructive">{errors["email"]}</p>}
         </div>
       </div>
@@ -84,7 +105,13 @@ function ApplicationForm() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="app-message">Why you, and a link to your work</Label>
-        <Textarea id="app-message" rows={5} value={values.message} onChange={update("message")} maxLength={2000} />
+        <Textarea
+          id="app-message"
+          rows={5}
+          value={values.message}
+          onChange={update("message")}
+          maxLength={2000}
+        />
         {errors["message"] && <p className="text-sm text-destructive">{errors["message"]}</p>}
       </div>
       <div>
@@ -100,7 +127,7 @@ function CareersPage() {
   return (
     <>
       <PageHero
-        eyebrow="Careers"
+        eyebrow="Join Kalvoteq's Global Engineering Network"
         title="Work with engineers who set the standard, not the schedule"
         intro="We hire senior, pay transparently, and protect focus. No timesheet theatre, no bench, no surprise reassignments."
       />
@@ -108,7 +135,10 @@ function CareersPage() {
       <Section eyebrow="Open roles" title={`${openRoles.length} positions open`}>
         <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border">
           {openRoles.map((role) => (
-            <li key={role.title} className="flex flex-col gap-3 bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
+            <li
+              key={role.title}
+              className="flex flex-col gap-3 bg-card p-6 sm:flex-row sm:items-center sm:justify-between"
+            >
               <div>
                 <h3 className="font-semibold">{role.title}</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -130,9 +160,18 @@ function CareersPage() {
         <div className="grid gap-6 md:grid-cols-3">
           {[
             { t: "Transparent pay bands", d: "Published bands per level. No negotiation lottery." },
-            { t: "Learning budget", d: "€2,500 per year plus conference time, no approval theatre." },
-            { t: "Remote-first EU", d: "Work anywhere in the EU with quarterly team weeks in Tallinn." },
-            { t: "Health and wellbeing", d: "Private health cover and a monthly wellbeing allowance." },
+            {
+              t: "Learning budget",
+              d: "€2,500 per year plus conference time, no approval theatre.",
+            },
+            {
+              t: "Remote-first EU",
+              d: "Work anywhere in the EU with quarterly team weeks in Tallinn.",
+            },
+            {
+              t: "Health and wellbeing",
+              d: "Private health cover and a monthly wellbeing allowance.",
+            },
             { t: "Real time off", d: "30 days paid leave, and we track that you take it." },
             { t: "Equipment", d: "Your choice of machine, refreshed every three years." },
           ].map((b) => (
@@ -147,8 +186,16 @@ function CareersPage() {
       <Section eyebrow="Hiring process" title="Four steps, two weeks">
         <ol className="grid gap-6 md:grid-cols-4">
           {[
-            { s: "01", t: "Intro call", d: "30 minutes with the talent team on context and expectations." },
-            { s: "02", t: "Technical conversation", d: "Live system design and code discussion — no take-home puzzles." },
+            {
+              s: "01",
+              t: "Intro call",
+              d: "30 minutes with the talent team on context and expectations.",
+            },
+            {
+              s: "02",
+              t: "Technical conversation",
+              d: "Live system design and code discussion — no take-home puzzles.",
+            },
             { s: "03", t: "Team session", d: "Meet the practice lead and two future colleagues." },
             { s: "04", t: "Offer", d: "Written offer with band, level, and growth path attached." },
           ].map((step) => (
@@ -165,8 +212,8 @@ function CareersPage() {
         <div className="grid gap-10 lg:grid-cols-2">
           <p className="text-base leading-relaxed text-muted-foreground">
             We are a small firm by design. Decisions are made in writing, reviewed openly, and
-            revisited when evidence changes. Engineers talk to clients directly — there is no account
-            layer translating requirements into ambiguity.
+            revisited when evidence changes. Engineers talk to clients directly — there is no
+            account layer translating requirements into ambiguity.
           </p>
           <p className="text-base leading-relaxed text-muted-foreground">
             Team weeks in Tallinn happen quarterly: two days of planning, one day of internal
@@ -182,7 +229,12 @@ function CareersPage() {
         </div>
       </Section>
 
-      <CTASection title="Not seeing your role?" text="We keep speculative applications on file for six months and review them every hiring cycle." />
+      <CTASection
+        title="Not seeing your role?"
+        text="We keep speculative applications on file for six months and review them every hiring cycle."
+        primaryLabel="Contact Kalvoteq"
+        primaryTo="/contact"
+      />
     </>
   );
 }

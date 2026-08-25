@@ -15,6 +15,7 @@ import { Footer } from "@/components/layout/Footer";
 import { BackToTop, CookieBanner } from "@/components/layout/SiteChrome";
 import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
+import { professionalServiceJsonLd, websiteJsonLd } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -72,11 +73,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "kalvoteq — Software Consulting & Engineering Teams" },
+      { title: "kalvoteq — Engineering & Technology Consulting" },
       {
         name: "description",
         content:
-          "Estonian software consulting firm building enterprise platforms, cloud, and AI systems with senior engineering teams for clients worldwide.",
+          "Kalvoteq is a European engineering and technology consulting company. We build and modernize software, and provide experienced engineering talent and dedicated teams to organizations that need to scale delivery capacity.",
       },
       { property: "og:site_name", content: "kalvoteq" },
       { property: "og:type", content: "website" },
@@ -96,24 +97,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
     scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "kalvoteq",
-          description: "Software consulting and engineering teams, headquartered in Tallinn, Estonia.",
-          address: {
-            "@type": "PostalAddress",
-            streetAddress: "Tornimäe 5",
-            addressLocality: "Tallinn",
-            postalCode: "10145",
-            addressCountry: "EE",
-          },
-          email: "hello@kalvoteq.com",
-          telephone: "+372 600 1240",
-        }),
-      },
+      { type: "application/ld+json", children: JSON.stringify(professionalServiceJsonLd()) },
+      { type: "application/ld+json", children: JSON.stringify(websiteJsonLd()) },
     ],
   }),
   shellComponent: RootShell,
