@@ -133,7 +133,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/85 backdrop-blur-xl">
-      <div className="container-page flex h-24 items-center justify-between gap-6">
+      <div className="container-page flex h-28 items-center justify-between gap-6">
         <Link to="/" className="flex items-center gap-2.5" onClick={() => setMobile(false)}>
           <div className="rounded-lg bg-ink px-3 py-2">
             <img
