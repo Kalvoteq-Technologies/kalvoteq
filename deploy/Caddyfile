@@ -1,0 +1,7 @@
+{$APP_DOMAIN} {
+    reverse_proxy app:3000
+}
+
+{$ROOT_DOMAIN} {
+    redir https://{$APP_DOMAIN}{uri} permanent
+}
