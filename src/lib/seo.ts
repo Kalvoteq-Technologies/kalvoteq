@@ -10,9 +10,9 @@ export function professionalServiceJsonLd() {
       "Engineering and technology consulting company helping organizations build software and scale engineering capability.",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Tornimäe 5",
+      streetAddress: "Amburi 20",
       addressLocality: "Tallinn",
-      postalCode: "10145",
+      postalCode: "11711",
       addressCountry: "EE",
     },
     email: company.email,

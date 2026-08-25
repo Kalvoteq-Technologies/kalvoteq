@@ -9,9 +9,9 @@ export const company = {
   legalName: "Kalvoteq Technologies OU",
   tagline: "Building high-performance software solutions and engineering teams.",
   email: "hello@kalvoteq.com",
-  phone: "+372 600 1240",
-  address: "Tornimäe 5, 10145 Tallinn, Estonia",
-  hours: "Mon–Fri, 09:00–18:00 EET",
+  phone: "+372 54210899",
+  address: "Amburi 20, 11711 Tallinn, Estonia",
+  hours: "Mon–Fri, 08:00–17:00 EET",
 } as const;
 
 export type Service = {

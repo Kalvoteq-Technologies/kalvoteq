@@ -222,19 +222,19 @@ function ContactPage() {
 
             <div className="overflow-hidden rounded-xl border border-border bg-surface">
               <iframe
-                title="Map of the kalvoteq office at Tornimäe 5, Tallinn"
-                src="https://www.openstreetmap.org/export/embed.html?bbox=24.7500%2C59.4295%2C24.7660%2C59.4365&layer=mapnik&marker=59.4330%2C24.7580"
+                title="Map of the kalvoteq office at Amburi 20, Tallinn"
+                src="https://www.openstreetmap.org/export/embed.html?bbox=24.6729656%2C59.4549878%2C24.6889656%2C59.4619878&layer=mapnik&marker=59.4584878%2C24.6809656"
                 className="h-56 w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
               <a
-                href="https://www.openstreetmap.org/?mlat=59.4330&mlon=24.7580#map=17/59.4330/24.7580"
+                href="https://www.openstreetmap.org/?mlat=59.4584878&mlon=24.6809656#map=17/59.4584878/24.6809656"
                 target="_blank"
                 rel="noreferrer"
                 className="block border-t border-border px-4 py-3 text-sm text-muted-foreground hover:text-foreground"
               >
-                Open Tornimäe 5, Tallinn in maps →
+                Open Amburi 20, Tallinn in maps →
               </a>
             </div>
 
