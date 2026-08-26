@@ -44,6 +44,7 @@ import { Route as AuthenticatedClientPortalProfileRouteImport } from './routes/_
 import { Route as AuthenticatedClientPortalRequestsRouteImport } from './routes/_authenticated/_client/portal-requests'
 import { Route as AuthenticatedDeveloperWorkspaceRouteImport } from './routes/_authenticated/_developer/workspace'
 import { Route as AuthenticatedDeveloperWorkspaceProfileRouteImport } from './routes/_authenticated/_developer/workspace-profile'
+import { Route as ApiAuthEmailHookRouteImport } from './routes/api/auth/email-hook'
 import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_authenticated/_admin/admin.index'
 import { Route as AuthenticatedAdminAdminIdRouteImport } from './routes/_authenticated/_admin/admin.$id'
 import { Route as AuthenticatedAdminAdminDeliveryRouteImport } from './routes/_authenticated/_admin/admin.delivery'
@@ -233,6 +234,11 @@ const AuthenticatedDeveloperWorkspaceProfileRoute =
     path: '/workspace-profile',
     getParentRoute: () => AuthenticatedDeveloperRouteRoute,
   } as any)
+const ApiAuthEmailHookRoute = ApiAuthEmailHookRouteImport.update({
+  id: '/api/auth/email-hook',
+  path: '/api/auth/email-hook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminAdminIndexRoute =
   AuthenticatedAdminAdminIndexRouteImport.update({
     id: '/admin/',
@@ -307,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/portal-requests': typeof AuthenticatedClientPortalRequestsRoute
   '/workspace': typeof AuthenticatedDeveloperWorkspaceRoute
   '/workspace-profile': typeof AuthenticatedDeveloperWorkspaceProfileRoute
+  '/api/auth/email-hook': typeof ApiAuthEmailHookRoute
   '/admin/$id': typeof AuthenticatedAdminAdminIdRoute
   '/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByTo {
   '/portal-requests': typeof AuthenticatedClientPortalRequestsRoute
   '/workspace': typeof AuthenticatedDeveloperWorkspaceRoute
   '/workspace-profile': typeof AuthenticatedDeveloperWorkspaceProfileRoute
+  '/api/auth/email-hook': typeof ApiAuthEmailHookRoute
   '/admin/$id': typeof AuthenticatedAdminAdminIdRoute
   '/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
@@ -392,6 +400,7 @@ export interface FileRoutesById {
   '/_authenticated/_client/portal-requests': typeof AuthenticatedClientPortalRequestsRoute
   '/_authenticated/_developer/workspace': typeof AuthenticatedDeveloperWorkspaceRoute
   '/_authenticated/_developer/workspace-profile': typeof AuthenticatedDeveloperWorkspaceProfileRoute
+  '/api/auth/email-hook': typeof ApiAuthEmailHookRoute
   '/_authenticated/_admin/admin/$id': typeof AuthenticatedAdminAdminIdRoute
   '/_authenticated/_admin/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
@@ -434,6 +443,7 @@ export interface FileRouteTypes {
     | '/portal-requests'
     | '/workspace'
     | '/workspace-profile'
+    | '/api/auth/email-hook'
     | '/admin/$id'
     | '/admin/delivery'
     | '/admin/documents'
@@ -474,6 +484,7 @@ export interface FileRouteTypes {
     | '/portal-requests'
     | '/workspace'
     | '/workspace-profile'
+    | '/api/auth/email-hook'
     | '/admin/$id'
     | '/admin/delivery'
     | '/admin/documents'
@@ -518,6 +529,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_client/portal-requests'
     | '/_authenticated/_developer/workspace'
     | '/_authenticated/_developer/workspace-profile'
+    | '/api/auth/email-hook'
     | '/_authenticated/_admin/admin/$id'
     | '/_authenticated/_admin/admin/delivery'
     | '/_authenticated/_admin/admin/documents'
@@ -551,6 +563,7 @@ export interface RootRouteChildren {
   IndustriesIndexRoute: typeof IndustriesIndexRoute
   InsightsIndexRoute: typeof InsightsIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
+  ApiAuthEmailHookRoute: typeof ApiAuthEmailHookRoute
   ApiPublicBlogImageSplatRoute: typeof ApiPublicBlogImageSplatRoute
 }
 
@@ -801,6 +814,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDeveloperWorkspaceProfileRouteImport
       parentRoute: typeof AuthenticatedDeveloperRouteRoute
     }
+    '/api/auth/email-hook': {
+      id: '/api/auth/email-hook'
+      path: '/api/auth/email-hook'
+      fullPath: '/api/auth/email-hook'
+      preLoaderRoute: typeof ApiAuthEmailHookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/_admin/admin/': {
       id: '/_authenticated/_admin/admin/'
       path: '/admin'
@@ -965,6 +985,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndustriesIndexRoute: IndustriesIndexRoute,
   InsightsIndexRoute: InsightsIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
+  ApiAuthEmailHookRoute: ApiAuthEmailHookRoute,
   ApiPublicBlogImageSplatRoute: ApiPublicBlogImageSplatRoute,
 }
 export const routeTree = rootRouteImport
