@@ -17,6 +17,7 @@ export function professionalServiceJsonLd() {
     },
     email: company.email,
     telephone: company.phone,
+    vatID: company.vatNumber,
     url: "https://kalvoteq.com",
   };
 }

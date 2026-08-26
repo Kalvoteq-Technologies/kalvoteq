@@ -129,7 +129,8 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-4 py-6 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {company.legalName}. Registry code {company.registryCode}.{" "}
+            © {new Date().getFullYear()} {company.legalName}. Registry code {company.registryCode}.
+            VAT {company.vatNumber}.{" "}
             {company.address}
           </p>
           <ul className="flex flex-wrap gap-5">

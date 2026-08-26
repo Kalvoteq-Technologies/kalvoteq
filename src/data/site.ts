@@ -8,6 +8,7 @@ export const company = {
   name: "kalvoteq",
   legalName: "Kalvoteq Technologies OU",
   registryCode: "17583081",
+  vatNumber: "EE103021928",
   email: "hello@kalvoteq.com",
   phone: "+372 54210899",
   address: "Amburi 20, 11711 Tallinn, Estonia",
