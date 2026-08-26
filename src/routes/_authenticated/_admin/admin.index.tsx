@@ -40,6 +40,9 @@ function AdminPage() {
         title="Your articles"
         intro="Everything you have written, drafted, or published to the kalvoteq insights archive."
       >
+        <Button asChild variant="outline">
+          <Link to="/admin/leads">Leads</Link>
+        </Button>
         <Button asChild>
           <Link to="/admin/new">
             <Plus className="mr-1.5 h-4 w-4" /> New article

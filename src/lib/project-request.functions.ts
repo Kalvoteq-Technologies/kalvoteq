@@ -17,6 +17,21 @@ const projectRequestInput = z.object({
 export const submitProjectRequest = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => projectRequestInput.parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error: insertError } = await supabaseAdmin.from("project_requests").insert({
+      name: data.name,
+      company: data.company,
+      business_email: data.businessEmail,
+      project_type: data.projectType,
+      project_description: data.projectDescription,
+      current_stage: data.currentStage,
+      expected_timeline: data.expectedTimeline,
+      approximate_budget_range: data.approximateBudgetRange,
+      required_technologies: data.requiredTechnologies ?? null,
+      additional_information: data.additionalInformation ?? null,
+    });
+    if (insertError) console.error("[project-request] Failed to persist lead", insertError);
+
     const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
     const key = `${data.businessEmail}-${Date.now()}`;
 

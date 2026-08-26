@@ -11,6 +11,15 @@ const careerApplicationInput = z.object({
 export const submitCareerApplication = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => careerApplicationInput.parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error: insertError } = await supabaseAdmin.from("career_applications").insert({
+      name: data.name,
+      email: data.email,
+      role: data.role,
+      message: data.message,
+    });
+    if (insertError) console.error("[career-application] Failed to persist lead", insertError);
+
     const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
     const key = `${data.email}-${Date.now()}`;
 

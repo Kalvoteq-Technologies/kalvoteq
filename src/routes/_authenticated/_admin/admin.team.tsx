@@ -122,6 +122,9 @@ function TeamPage() {
         <Button asChild variant="outline">
           <Link to="/admin/documents">Developer documents</Link>
         </Button>
+        <Button asChild variant="outline">
+          <Link to="/admin/leads">Leads</Link>
+        </Button>
         <CreateUserDialog
           onCreate={async (values) => {
             await createFn({ data: values });

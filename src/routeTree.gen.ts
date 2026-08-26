@@ -49,6 +49,7 @@ import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminAdminIdRouteImport } from './routes/_authenticated/_admin/admin.$id'
 import { Route as AuthenticatedAdminAdminDeliveryRouteImport } from './routes/_authenticated/_admin/admin.delivery'
 import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin.documents'
+import { Route as AuthenticatedAdminAdminLeadsRouteImport } from './routes/_authenticated/_admin/admin.leads'
 import { Route as AuthenticatedAdminAdminNewRouteImport } from './routes/_authenticated/_admin/admin.new'
 import { Route as AuthenticatedAdminAdminTeamRouteImport } from './routes/_authenticated/_admin/admin.team'
 import { Route as ApiPublicBlogImageSplatRouteImport } from './routes/api/public/blog-image.$'
@@ -263,6 +264,12 @@ const AuthenticatedAdminAdminDocumentsRoute =
     path: '/admin/documents',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminAdminLeadsRoute =
+  AuthenticatedAdminAdminLeadsRouteImport.update({
+    id: '/admin/leads',
+    path: '/admin/leads',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminAdminNewRoute =
   AuthenticatedAdminAdminNewRouteImport.update({
     id: '/admin/new',
@@ -317,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/admin/$id': typeof AuthenticatedAdminAdminIdRoute
   '/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
+  '/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
   '/admin/new': typeof AuthenticatedAdminAdminNewRoute
   '/admin/team': typeof AuthenticatedAdminAdminTeamRoute
   '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
@@ -358,6 +366,7 @@ export interface FileRoutesByTo {
   '/admin/$id': typeof AuthenticatedAdminAdminIdRoute
   '/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
+  '/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
   '/admin/new': typeof AuthenticatedAdminAdminNewRoute
   '/admin/team': typeof AuthenticatedAdminAdminTeamRoute
   '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
@@ -404,6 +413,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/$id': typeof AuthenticatedAdminAdminIdRoute
   '/_authenticated/_admin/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
+  '/_authenticated/_admin/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
   '/_authenticated/_admin/admin/new': typeof AuthenticatedAdminAdminNewRoute
   '/_authenticated/_admin/admin/team': typeof AuthenticatedAdminAdminTeamRoute
   '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
@@ -447,6 +457,7 @@ export interface FileRouteTypes {
     | '/admin/$id'
     | '/admin/delivery'
     | '/admin/documents'
+    | '/admin/leads'
     | '/admin/new'
     | '/admin/team'
     | '/api/public/blog-image/$'
@@ -488,6 +499,7 @@ export interface FileRouteTypes {
     | '/admin/$id'
     | '/admin/delivery'
     | '/admin/documents'
+    | '/admin/leads'
     | '/admin/new'
     | '/admin/team'
     | '/api/public/blog-image/$'
@@ -533,6 +545,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/$id'
     | '/_authenticated/_admin/admin/delivery'
     | '/_authenticated/_admin/admin/documents'
+    | '/_authenticated/_admin/admin/leads'
     | '/_authenticated/_admin/admin/new'
     | '/_authenticated/_admin/admin/team'
     | '/api/public/blog-image/$'
@@ -849,6 +862,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminDocumentsRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/_admin/admin/leads': {
+      id: '/_authenticated/_admin/admin/leads'
+      path: '/admin/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AuthenticatedAdminAdminLeadsRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/_admin/admin/new': {
       id: '/_authenticated/_admin/admin/new'
       path: '/admin/new'
@@ -877,6 +897,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAdminIdRoute: typeof AuthenticatedAdminAdminIdRoute
   AuthenticatedAdminAdminDeliveryRoute: typeof AuthenticatedAdminAdminDeliveryRoute
   AuthenticatedAdminAdminDocumentsRoute: typeof AuthenticatedAdminAdminDocumentsRoute
+  AuthenticatedAdminAdminLeadsRoute: typeof AuthenticatedAdminAdminLeadsRoute
   AuthenticatedAdminAdminNewRoute: typeof AuthenticatedAdminAdminNewRoute
   AuthenticatedAdminAdminTeamRoute: typeof AuthenticatedAdminAdminTeamRoute
   AuthenticatedAdminAdminIndexRoute: typeof AuthenticatedAdminAdminIndexRoute
@@ -888,6 +909,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminAdminDeliveryRoute: AuthenticatedAdminAdminDeliveryRoute,
     AuthenticatedAdminAdminDocumentsRoute:
       AuthenticatedAdminAdminDocumentsRoute,
+    AuthenticatedAdminAdminLeadsRoute: AuthenticatedAdminAdminLeadsRoute,
     AuthenticatedAdminAdminNewRoute: AuthenticatedAdminAdminNewRoute,
     AuthenticatedAdminAdminTeamRoute: AuthenticatedAdminAdminTeamRoute,
     AuthenticatedAdminAdminIndexRoute: AuthenticatedAdminAdminIndexRoute,

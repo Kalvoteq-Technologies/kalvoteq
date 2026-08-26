@@ -21,6 +21,25 @@ const talentRequestInput = z.object({
 export const submitTalentRequest = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => talentRequestInput.parse(data))
   .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error: insertError } = await supabaseAdmin.from("talent_requests").insert({
+      full_name: data.fullName,
+      business_email: data.businessEmail,
+      company: data.company,
+      country: data.country,
+      required_role: data.requiredRole,
+      required_skills: data.requiredSkills,
+      technology_stack: data.technologyStack,
+      number_of_engineers: data.numberOfEngineers,
+      seniority: data.seniority,
+      expected_start_date: data.expectedStartDate,
+      expected_engagement_duration: data.expectedEngagementDuration,
+      preferred_timezone_overlap: data.preferredTimezoneOverlap,
+      project_description: data.projectDescription,
+      additional_information: data.additionalInformation ?? null,
+    });
+    if (insertError) console.error("[talent-request] Failed to persist lead", insertError);
+
     const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
     const key = `${data.businessEmail}-${Date.now()}`;
 
