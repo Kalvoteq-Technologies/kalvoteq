@@ -10,6 +10,7 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import type { TemplateEntry } from "./registry";
 
 interface RecoveryEmailProps {
   siteName: string;
@@ -40,6 +41,16 @@ export const RecoveryEmail = ({ siteName, confirmationUrl }: RecoveryEmailProps)
 );
 
 export default RecoveryEmail;
+
+export const template = {
+  component: RecoveryEmail,
+  subject: (data: Record<string, any>) => `Reset your password — ${data["siteName"] ?? "kalvoteq"}`,
+  displayName: "Auth: password recovery",
+  previewData: {
+    siteName: "kalvoteq",
+    confirmationUrl: "https://kalvoteq.com",
+  },
+} satisfies TemplateEntry;
 
 const main = {
   backgroundColor: "#ffffff",

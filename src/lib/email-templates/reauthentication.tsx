@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { Body, Container, Head, Heading, Html, Preview, Text } from "@react-email/components";
+import type { TemplateEntry } from "./registry";
 
 interface ReauthenticationEmailProps {
   token: string;
@@ -25,6 +26,15 @@ export const ReauthenticationEmail = ({ token }: ReauthenticationEmailProps) => 
 );
 
 export default ReauthenticationEmail;
+
+export const template = {
+  component: ReauthenticationEmail,
+  subject: "Your verification code — kalvoteq",
+  displayName: "Auth: reauthentication code",
+  previewData: {
+    token: "123456",
+  },
+} satisfies TemplateEntry;
 
 const main = {
   backgroundColor: "#ffffff",

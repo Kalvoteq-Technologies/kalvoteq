@@ -26,6 +26,12 @@ import { template as projectRequestNotification } from "./project-request-notifi
 import { template as projectRequestConfirmation } from "./project-request-confirmation";
 import { template as careerApplicationNotification } from "./career-application-notification";
 import { template as careerApplicationConfirmation } from "./career-application-confirmation";
+import { template as authSignup } from "./signup";
+import { template as authMagicLink } from "./magic-link";
+import { template as authRecovery } from "./recovery";
+import { template as authInvite } from "./invite";
+import { template as authEmailChange } from "./email-change";
+import { template as authReauthentication } from "./reauthentication";
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   "contact-confirmation": contactConfirmation,
@@ -37,4 +43,10 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   "project-request-confirmation": projectRequestConfirmation,
   "career-application-notification": careerApplicationNotification,
   "career-application-confirmation": careerApplicationConfirmation,
+  "auth-signup": authSignup,
+  "auth-magic-link": authMagicLink,
+  "auth-recovery": authRecovery,
+  "auth-invite": authInvite,
+  "auth-email-change": authEmailChange,
+  "auth-reauthentication": authReauthentication,
 };

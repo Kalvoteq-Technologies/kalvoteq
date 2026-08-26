@@ -10,6 +10,7 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import type { TemplateEntry } from "./registry";
 
 interface MagicLinkEmailProps {
   siteName: string;
@@ -38,6 +39,16 @@ export const MagicLinkEmail = ({ siteName, confirmationUrl }: MagicLinkEmailProp
 );
 
 export default MagicLinkEmail;
+
+export const template = {
+  component: MagicLinkEmail,
+  subject: (data: Record<string, any>) => `Your login link — ${data["siteName"] ?? "kalvoteq"}`,
+  displayName: "Auth: magic link",
+  previewData: {
+    siteName: "kalvoteq",
+    confirmationUrl: "https://kalvoteq.com",
+  },
+} satisfies TemplateEntry;
 
 const main = {
   backgroundColor: "#ffffff",

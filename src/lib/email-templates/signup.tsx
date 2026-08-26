@@ -11,6 +11,7 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import type { TemplateEntry } from "./registry";
 
 interface SignupEmailProps {
   siteName: string;
@@ -57,6 +58,18 @@ export const SignupEmail = ({
 );
 
 export default SignupEmail;
+
+export const template = {
+  component: SignupEmail,
+  subject: (data: Record<string, any>) => `Confirm your email — ${data["siteName"] ?? "kalvoteq"}`,
+  displayName: "Auth: signup confirmation",
+  previewData: {
+    siteName: "kalvoteq",
+    siteUrl: "https://kalvoteq.com",
+    recipient: "jane@acme.com",
+    confirmationUrl: "https://kalvoteq.com",
+  },
+} satisfies TemplateEntry;
 
 const main = {
   backgroundColor: "#ffffff",

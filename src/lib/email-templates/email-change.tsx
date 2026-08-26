@@ -11,6 +11,7 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import type { TemplateEntry } from "./registry";
 
 interface EmailChangeEmailProps {
   siteName: string;
@@ -60,6 +61,19 @@ export const EmailChangeEmail = ({
 );
 
 export default EmailChangeEmail;
+
+export const template = {
+  component: EmailChangeEmail,
+  subject: (data: Record<string, any>) => `Confirm your email change — ${data["siteName"] ?? "kalvoteq"}`,
+  displayName: "Auth: email change confirmation",
+  previewData: {
+    siteName: "kalvoteq",
+    oldEmail: "jane@old-address.com",
+    email: "jane@old-address.com",
+    newEmail: "jane@new-address.com",
+    confirmationUrl: "https://kalvoteq.com",
+  },
+} satisfies TemplateEntry;
 
 const main = {
   backgroundColor: "#ffffff",

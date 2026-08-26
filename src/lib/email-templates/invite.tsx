@@ -11,6 +11,7 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import type { TemplateEntry } from "./registry";
 
 interface InviteEmailProps {
   siteName: string;
@@ -44,6 +45,17 @@ export const InviteEmail = ({ siteName, siteUrl, confirmationUrl }: InviteEmailP
 );
 
 export default InviteEmail;
+
+export const template = {
+  component: InviteEmail,
+  subject: (data: Record<string, any>) => `You've been invited to join ${data["siteName"] ?? "kalvoteq"}`,
+  displayName: "Auth: invite",
+  previewData: {
+    siteName: "kalvoteq",
+    siteUrl: "https://kalvoteq.com",
+    confirmationUrl: "https://kalvoteq.com",
+  },
+} satisfies TemplateEntry;
 
 const main = {
   backgroundColor: "#ffffff",
