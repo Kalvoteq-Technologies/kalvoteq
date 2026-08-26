@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import logoSrc from "@/assets/kalvoteq-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { company, services, industries } from "@/data/site";
+import { bankDetails, company, services, industries } from "@/data/site";
 
 const columns = [
   {
@@ -39,12 +39,18 @@ const legalLinks = [
   { label: "Terms of Service", to: "/terms" },
 ] as const;
 
+const companyDetails = [
+  { label: "Registry code", value: company.registryCode },
+  { label: "VAT", value: company.vatNumber },
+  { label: "IBAN", value: bankDetails.iban },
+] as const;
+
 export function Footer() {
   const [email, setEmail] = useState("");
 
   return (
     <footer className="border-t border-border bg-ink text-ink-foreground">
-      <div className="container-page grid gap-12 py-16 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div className="container-page grid gap-12 py-16 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-2.5">
             <img
@@ -124,14 +130,26 @@ export function Footer() {
             ))}
           </ul>
         </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
+            Company Details
+          </p>
+          <ul className="mt-4 space-y-2.5">
+            {companyDetails.map((d) => (
+              <li key={d.label} className="text-sm text-ink-muted">
+                <span className="block text-xs text-ink-muted/70">{d.label}</span>
+                {d.value}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-4 py-6 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {company.legalName}. Registry code {company.registryCode}.
-            VAT {company.vatNumber}.{" "}
-            {company.address}
+            © {new Date().getFullYear()} {company.legalName}. {company.address}
           </p>
           <ul className="flex flex-wrap gap-5">
             {legalLinks.map((l) => (
