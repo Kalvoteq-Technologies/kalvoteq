@@ -14,9 +14,16 @@ ROOT_DOMAIN=example.com
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 RESEND_API_KEY=your-resend-api-key
 ```
+
+`SUPABASE_PUBLISHABLE_KEY` (no `VITE_` prefix) is required server-side by the authenticated
+server-function middleware (`src/integrations/supabase/auth-middleware.ts`) — it is not a
+duplicate of `VITE_SUPABASE_PUBLISHABLE_KEY`, which only reaches the browser bundle. Omitting it
+makes every admin-only server action (e.g. Team & access) fail with "Missing Supabase environment
+variable(s): SUPABASE_PUBLISHABLE_KEY" while the rest of the site works normally.
 
 6. Start the stack:
 
