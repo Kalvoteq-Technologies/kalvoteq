@@ -43,6 +43,7 @@ const companyDetails = [
   { label: "Registry code", value: company.registryCode },
   { label: "VAT", value: company.vatNumber },
   { label: "IBAN", value: bankDetails.iban },
+  { label: "Email", value: company.email },
 ] as const;
 
 export function Footer() {
@@ -139,7 +140,13 @@ export function Footer() {
             {companyDetails.map((d) => (
               <li key={d.label} className="text-sm text-ink-muted">
                 <span className="block text-xs text-ink-muted/70">{d.label}</span>
-                {d.value}
+                {d.label === "Email" ? (
+                  <a href={`mailto:${d.value}`} className="transition-colors hover:text-ink-foreground">
+                    {d.value}
+                  </a>
+                ) : (
+                  d.value
+                )}
               </li>
             ))}
           </ul>
