@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Inbox } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,7 +21,23 @@ import {
   type ProjectRequestLead,
   type TalentRequestLead,
 } from "@/lib/leads";
+import { listTeam, type TeamMember } from "@/lib/team.functions";
 import { cn } from "@/lib/utils";
+
+function useClients() {
+  const fetchTeam = useServerFn(listTeam);
+  return useQuery({
+    queryKey: ["team", "clients"],
+    queryFn: async () => {
+      const team = await fetchTeam();
+      return team.filter((m) => m.roles.includes("client"));
+    },
+  });
+}
+
+function findClientByEmail(clients: TeamMember[], email: string): TeamMember | undefined {
+  return clients.find((c) => c.email?.toLowerCase() === email.toLowerCase());
+}
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/leads")({
   head: () => ({
@@ -81,6 +98,7 @@ function EmptyState({ label }: { label: string }) {
 function TalentRequestsList() {
   const queryClient = useQueryClient();
   const { data: leads = [], isLoading } = useQuery(talentRequestsQuery());
+  const { data: clients = [] } = useClients();
   const mutation = useMutation({
     mutationFn: (vars: { id: string; status: LeadStatus }) =>
       setTalentRequestStatus(vars.id, vars.status),
@@ -96,33 +114,54 @@ function TalentRequestsList() {
 
   return (
     <ul className="divide-y divide-border rounded-xl border border-border bg-card">
-      {leads.map((lead: TalentRequestLead) => (
-        <li key={lead.id} className="flex flex-wrap items-start justify-between gap-4 p-5">
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold">
-              {lead.full_name} <span className="font-normal text-muted-foreground">— {lead.company}</span>
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">{lead.business_email} · {lead.country}</p>
-            <p className="mt-2 text-sm">
-              <span className="font-medium">{lead.required_role}</span> · {lead.seniority} ·{" "}
-              {lead.number_of_engineers} engineer(s) · {lead.technology_stack}
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">{lead.project_description}</p>
-            <p className="mt-2 text-xs text-muted-foreground">
-              Start: {lead.expected_start_date} · Duration: {lead.expected_engagement_duration} ·
-              Overlap: {lead.preferred_timezone_overlap}
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Submitted {new Date(lead.created_at).toLocaleString("en-GB")}
-            </p>
-          </div>
-          <StatusButtons
-            current={lead.status}
-            disabled={mutation.isPending}
-            onChange={(status) => mutation.mutate({ id: lead.id, status })}
-          />
-        </li>
-      ))}
+      {leads.map((lead: TalentRequestLead) => {
+        const client = findClientByEmail(clients, lead.business_email);
+        return (
+          <li key={lead.id} className="flex flex-wrap items-start justify-between gap-4 p-5">
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold">
+                {lead.full_name} <span className="font-normal text-muted-foreground">— {lead.company}</span>
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{lead.business_email} · {lead.country}</p>
+              <p className="mt-2 text-sm">
+                <span className="font-medium">{lead.required_role}</span> · {lead.seniority} ·{" "}
+                {lead.number_of_engineers} engineer(s) · {lead.technology_stack}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{lead.project_description}</p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                Start: {lead.expected_start_date} · Duration: {lead.expected_engagement_duration} ·
+                Overlap: {lead.preferred_timezone_overlap}
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Submitted {new Date(lead.created_at).toLocaleString("en-GB")}
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <StatusButtons
+                current={lead.status}
+                disabled={mutation.isPending}
+                onChange={(status) => mutation.mutate({ id: lead.id, status })}
+              />
+              {client ? (
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    to="/admin/delivery"
+                    search={{
+                      clientId: client.id,
+                      name: `${lead.company} — ${lead.required_role} engagement`,
+                      summary: lead.project_description,
+                    }}
+                  >
+                    Create project
+                  </Link>
+                </Button>
+              ) : (
+                <p className="text-xs text-muted-foreground">No client account yet</p>
+              )}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -130,6 +169,7 @@ function TalentRequestsList() {
 function ProjectRequestsList() {
   const queryClient = useQueryClient();
   const { data: leads = [], isLoading } = useQuery(projectRequestsQuery());
+  const { data: clients = [] } = useClients();
   const mutation = useMutation({
     mutationFn: (vars: { id: string; status: LeadStatus }) =>
       setProjectRequestStatus(vars.id, vars.status),
@@ -145,32 +185,53 @@ function ProjectRequestsList() {
 
   return (
     <ul className="divide-y divide-border rounded-xl border border-border bg-card">
-      {leads.map((lead: ProjectRequestLead) => (
-        <li key={lead.id} className="flex flex-wrap items-start justify-between gap-4 p-5">
-          <div className="min-w-0 flex-1">
-            <p className="font-semibold">
-              {lead.name} <span className="font-normal text-muted-foreground">— {lead.company}</span>
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">{lead.business_email}</p>
-            <p className="mt-2 text-sm">
-              <span className="font-medium">{lead.project_type}</span> · {lead.current_stage} ·{" "}
-              {lead.expected_timeline} · {lead.approximate_budget_range}
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">{lead.project_description}</p>
-            {lead.required_technologies && (
-              <p className="mt-2 text-xs text-muted-foreground">Tech: {lead.required_technologies}</p>
-            )}
-            <p className="mt-1 text-xs text-muted-foreground">
-              Submitted {new Date(lead.created_at).toLocaleString("en-GB")}
-            </p>
-          </div>
-          <StatusButtons
-            current={lead.status}
-            disabled={mutation.isPending}
-            onChange={(status) => mutation.mutate({ id: lead.id, status })}
-          />
-        </li>
-      ))}
+      {leads.map((lead: ProjectRequestLead) => {
+        const client = findClientByEmail(clients, lead.business_email);
+        return (
+          <li key={lead.id} className="flex flex-wrap items-start justify-between gap-4 p-5">
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold">
+                {lead.name} <span className="font-normal text-muted-foreground">— {lead.company}</span>
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{lead.business_email}</p>
+              <p className="mt-2 text-sm">
+                <span className="font-medium">{lead.project_type}</span> · {lead.current_stage} ·{" "}
+                {lead.expected_timeline} · {lead.approximate_budget_range}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{lead.project_description}</p>
+              {lead.required_technologies && (
+                <p className="mt-2 text-xs text-muted-foreground">Tech: {lead.required_technologies}</p>
+              )}
+              <p className="mt-1 text-xs text-muted-foreground">
+                Submitted {new Date(lead.created_at).toLocaleString("en-GB")}
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <StatusButtons
+                current={lead.status}
+                disabled={mutation.isPending}
+                onChange={(status) => mutation.mutate({ id: lead.id, status })}
+              />
+              {client ? (
+                <Button asChild size="sm" variant="outline">
+                  <Link
+                    to="/admin/delivery"
+                    search={{
+                      clientId: client.id,
+                      name: `${lead.company} — ${lead.project_type}`,
+                      summary: lead.project_description,
+                    }}
+                  >
+                    Create project
+                  </Link>
+                </Button>
+              ) : (
+                <p className="text-xs text-muted-foreground">No client account yet</p>
+              )}
+            </div>
+          </li>
+        );
+      })}
     </ul>
   );
 }

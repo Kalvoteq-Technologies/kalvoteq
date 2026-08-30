@@ -4,6 +4,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { Thread } from "@/routes/_authenticated/_client/portal-requests";
 import { PageHero, Section } from "@/components/site/Primitives";
@@ -51,7 +52,14 @@ import {
 } from "@/lib/portal";
 import { listTeam } from "@/lib/team.functions";
 
+const searchSchema = z.object({
+  clientId: z.string().optional(),
+  name: z.string().optional(),
+  summary: z.string().optional(),
+});
+
 export const Route = createFileRoute("/_authenticated/_admin/admin/delivery")({
+  validateSearch: searchSchema,
   head: () => ({
     meta: [
       { title: "Client delivery — kalvoteq admin" },
@@ -127,11 +135,12 @@ function ProjectsTab() {
   const queryClient = useQueryClient();
   const { data: projects = [], isLoading } = useQuery(allProjectsQuery());
   const { data: clients = [] } = useClients();
-  const [open, setOpen] = useState(false);
+  const search = Route.useSearch();
+  const [open, setOpen] = useState(Boolean(search.clientId));
   const [form, setForm] = useState({
-    client_id: "",
-    name: "",
-    summary: "",
+    client_id: search.clientId ?? "",
+    name: search.name ?? "",
+    summary: search.summary ?? "",
     status: "discovery",
     progress: "0",
     next_milestone: "",
