@@ -54,8 +54,12 @@ crontab -e
 ```
 
 ```cron
-0 */4 * * * curl -fsS -X POST https://your-domain/api/internal/content-discover -H "x-cron-secret: a-long-random-secret" >> /var/log/kalvoteq-content-discover.log 2>&1
+0 */4 * * * curl -fsS -X POST https://APP_DOMAIN/api/internal/content-discover -H "x-cron-secret: a-long-random-secret" >> /var/log/kalvoteq-content-discover.log 2>&1
 ```
+
+Use the `APP_DOMAIN` value from `.env.production` (e.g. `www.kalvoteq.com`), not `ROOT_DOMAIN` — the
+Caddyfile 301-redirects the root domain to it, and curl does not follow redirects on a POST by
+default, so the cron job would silently no-op against the apex domain.
 
 Research and draft generation are triggered manually from `/admin/content` and are not scheduled —
 publishing stays behind human review by default.
