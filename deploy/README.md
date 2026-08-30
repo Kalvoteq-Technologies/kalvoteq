@@ -36,3 +36,26 @@ Caddy automatically requests and renews HTTPS certificates when DNS resolves and
 In Supabase Authentication settings, set the site URL to your domain and add the domain plus `/reset-password` to the redirect allow list. Configure Google OAuth in Supabase directly; the application no longer uses Lovable's OAuth service.
 
 Keep `.env.production` out of Git and back up the Supabase project separately.
+
+## Content Intelligence discovery schedule
+
+Add to `.env.production`:
+
+```env
+ANTHROPIC_API_KEY=your-anthropic-api-key
+CONTENT_CRON_SECRET=a-long-random-secret
+```
+
+The discovery job runs on the host, not inside the container — no new Docker service is needed.
+Add a crontab entry on the Hetzner host to check enabled RSS sources every few hours:
+
+```sh
+crontab -e
+```
+
+```cron
+0 */4 * * * curl -fsS -X POST https://your-domain/api/internal/content-discover -H "x-cron-secret: a-long-random-secret" >> /var/log/kalvoteq-content-discover.log 2>&1
+```
+
+Research and draft generation are triggered manually from `/admin/content` and are not scheduled —
+publishing stays behind human review by default.

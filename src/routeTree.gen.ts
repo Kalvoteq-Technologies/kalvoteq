@@ -45,8 +45,10 @@ import { Route as AuthenticatedClientPortalRequestsRouteImport } from './routes/
 import { Route as AuthenticatedDeveloperWorkspaceRouteImport } from './routes/_authenticated/_developer/workspace'
 import { Route as AuthenticatedDeveloperWorkspaceProfileRouteImport } from './routes/_authenticated/_developer/workspace-profile'
 import { Route as ApiAuthEmailHookRouteImport } from './routes/api/auth/email-hook'
+import { Route as ApiInternalContentDiscoverRouteImport } from './routes/api/internal/content-discover'
 import { Route as AuthenticatedAdminAdminIndexRouteImport } from './routes/_authenticated/_admin/admin.index'
 import { Route as AuthenticatedAdminAdminIdRouteImport } from './routes/_authenticated/_admin/admin.$id'
+import { Route as AuthenticatedAdminAdminContentRouteImport } from './routes/_authenticated/_admin/admin.content'
 import { Route as AuthenticatedAdminAdminDeliveryRouteImport } from './routes/_authenticated/_admin/admin.delivery'
 import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_authenticated/_admin/admin.documents'
 import { Route as AuthenticatedAdminAdminLeadsRouteImport } from './routes/_authenticated/_admin/admin.leads'
@@ -240,6 +242,12 @@ const ApiAuthEmailHookRoute = ApiAuthEmailHookRouteImport.update({
   path: '/api/auth/email-hook',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiInternalContentDiscoverRoute =
+  ApiInternalContentDiscoverRouteImport.update({
+    id: '/api/internal/content-discover',
+    path: '/api/internal/content-discover',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminAdminIndexRoute =
   AuthenticatedAdminAdminIndexRouteImport.update({
     id: '/admin/',
@@ -250,6 +258,12 @@ const AuthenticatedAdminAdminIdRoute =
   AuthenticatedAdminAdminIdRouteImport.update({
     id: '/admin/$id',
     path: '/admin/$id',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAdminContentRoute =
+  AuthenticatedAdminAdminContentRouteImport.update({
+    id: '/admin/content',
+    path: '/admin/content',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminAdminDeliveryRoute =
@@ -321,7 +335,9 @@ export interface FileRoutesByFullPath {
   '/workspace': typeof AuthenticatedDeveloperWorkspaceRoute
   '/workspace-profile': typeof AuthenticatedDeveloperWorkspaceProfileRoute
   '/api/auth/email-hook': typeof ApiAuthEmailHookRoute
+  '/api/internal/content-discover': typeof ApiInternalContentDiscoverRoute
   '/admin/$id': typeof AuthenticatedAdminAdminIdRoute
+  '/admin/content': typeof AuthenticatedAdminAdminContentRoute
   '/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
@@ -363,7 +379,9 @@ export interface FileRoutesByTo {
   '/workspace': typeof AuthenticatedDeveloperWorkspaceRoute
   '/workspace-profile': typeof AuthenticatedDeveloperWorkspaceProfileRoute
   '/api/auth/email-hook': typeof ApiAuthEmailHookRoute
+  '/api/internal/content-discover': typeof ApiInternalContentDiscoverRoute
   '/admin/$id': typeof AuthenticatedAdminAdminIdRoute
+  '/admin/content': typeof AuthenticatedAdminAdminContentRoute
   '/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
@@ -410,7 +428,9 @@ export interface FileRoutesById {
   '/_authenticated/_developer/workspace': typeof AuthenticatedDeveloperWorkspaceRoute
   '/_authenticated/_developer/workspace-profile': typeof AuthenticatedDeveloperWorkspaceProfileRoute
   '/api/auth/email-hook': typeof ApiAuthEmailHookRoute
+  '/api/internal/content-discover': typeof ApiInternalContentDiscoverRoute
   '/_authenticated/_admin/admin/$id': typeof AuthenticatedAdminAdminIdRoute
+  '/_authenticated/_admin/admin/content': typeof AuthenticatedAdminAdminContentRoute
   '/_authenticated/_admin/admin/delivery': typeof AuthenticatedAdminAdminDeliveryRoute
   '/_authenticated/_admin/admin/documents': typeof AuthenticatedAdminAdminDocumentsRoute
   '/_authenticated/_admin/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
@@ -454,7 +474,9 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/workspace-profile'
     | '/api/auth/email-hook'
+    | '/api/internal/content-discover'
     | '/admin/$id'
+    | '/admin/content'
     | '/admin/delivery'
     | '/admin/documents'
     | '/admin/leads'
@@ -496,7 +518,9 @@ export interface FileRouteTypes {
     | '/workspace'
     | '/workspace-profile'
     | '/api/auth/email-hook'
+    | '/api/internal/content-discover'
     | '/admin/$id'
+    | '/admin/content'
     | '/admin/delivery'
     | '/admin/documents'
     | '/admin/leads'
@@ -542,7 +566,9 @@ export interface FileRouteTypes {
     | '/_authenticated/_developer/workspace'
     | '/_authenticated/_developer/workspace-profile'
     | '/api/auth/email-hook'
+    | '/api/internal/content-discover'
     | '/_authenticated/_admin/admin/$id'
+    | '/_authenticated/_admin/admin/content'
     | '/_authenticated/_admin/admin/delivery'
     | '/_authenticated/_admin/admin/documents'
     | '/_authenticated/_admin/admin/leads'
@@ -577,6 +603,7 @@ export interface RootRouteChildren {
   InsightsIndexRoute: typeof InsightsIndexRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
   ApiAuthEmailHookRoute: typeof ApiAuthEmailHookRoute
+  ApiInternalContentDiscoverRoute: typeof ApiInternalContentDiscoverRoute
   ApiPublicBlogImageSplatRoute: typeof ApiPublicBlogImageSplatRoute
 }
 
@@ -834,6 +861,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthEmailHookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/internal/content-discover': {
+      id: '/api/internal/content-discover'
+      path: '/api/internal/content-discover'
+      fullPath: '/api/internal/content-discover'
+      preLoaderRoute: typeof ApiInternalContentDiscoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/_admin/admin/': {
       id: '/_authenticated/_admin/admin/'
       path: '/admin'
@@ -846,6 +880,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/$id'
       fullPath: '/admin/$id'
       preLoaderRoute: typeof AuthenticatedAdminAdminIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/_admin/admin/content': {
+      id: '/_authenticated/_admin/admin/content'
+      path: '/admin/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AuthenticatedAdminAdminContentRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/_admin/admin/delivery': {
@@ -895,6 +936,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAdminIdRoute: typeof AuthenticatedAdminAdminIdRoute
+  AuthenticatedAdminAdminContentRoute: typeof AuthenticatedAdminAdminContentRoute
   AuthenticatedAdminAdminDeliveryRoute: typeof AuthenticatedAdminAdminDeliveryRoute
   AuthenticatedAdminAdminDocumentsRoute: typeof AuthenticatedAdminAdminDocumentsRoute
   AuthenticatedAdminAdminLeadsRoute: typeof AuthenticatedAdminAdminLeadsRoute
@@ -906,6 +948,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminAdminIdRoute: AuthenticatedAdminAdminIdRoute,
+    AuthenticatedAdminAdminContentRoute: AuthenticatedAdminAdminContentRoute,
     AuthenticatedAdminAdminDeliveryRoute: AuthenticatedAdminAdminDeliveryRoute,
     AuthenticatedAdminAdminDocumentsRoute:
       AuthenticatedAdminAdminDocumentsRoute,
@@ -1008,6 +1051,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsIndexRoute: InsightsIndexRoute,
   ServicesIndexRoute: ServicesIndexRoute,
   ApiAuthEmailHookRoute: ApiAuthEmailHookRoute,
+  ApiInternalContentDiscoverRoute: ApiInternalContentDiscoverRoute,
   ApiPublicBlogImageSplatRoute: ApiPublicBlogImageSplatRoute,
 }
 export const routeTree = rootRouteImport

@@ -16,6 +16,9 @@ export interface Tag {
   slug: string;
 }
 
+export type PostOrigin = "manual" | "ai";
+export type PostVerificationStatus = "verified" | "partially_verified" | "unverified";
+
 export interface PostRow {
   id: string;
   slug: string;
@@ -30,6 +33,9 @@ export interface PostRow {
   created_at: string;
   category_id: string | null;
   author_id: string | null;
+  origin: PostOrigin;
+  verification_status: PostVerificationStatus | null;
+  research_job_id: string | null;
   categories: Category | null;
   post_tags: { tags: Tag | null }[];
 }
@@ -38,7 +44,7 @@ export interface PostRow {
 const sel = (s: string): string => s;
 
 const POST_FIELDS = sel(
-  "id, slug, title, excerpt, content, cover_image_url, reading_time, status, published_at, updated_at, created_at, category_id, author_id, categories(id, name, slug), post_tags(tags(id, name, slug))",
+  "id, slug, title, excerpt, content, cover_image_url, reading_time, status, published_at, updated_at, created_at, category_id, author_id, origin, verification_status, research_job_id, categories(id, name, slug), post_tags(tags(id, name, slug))",
 );
 
 export function postTags(post: Pick<PostRow, "post_tags">): Tag[] {
@@ -109,6 +115,23 @@ export const myPostsQuery = (userId: string | undefined) =>
         .from("posts")
         .select(POST_FIELDS)
         .eq("author_id", userId!)
+        .order("updated_at", { ascending: false })
+        .returns<PostRow[]>();
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+// Every AI-drafted post, regardless of which admin triggered generation —
+// distinct from myPostsQuery, which only returns the current user's own posts.
+export const aiPostsQuery = () =>
+  queryOptions({
+    queryKey: ["posts", "ai"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("posts")
+        .select(POST_FIELDS)
+        .eq("origin", "ai")
         .order("updated_at", { ascending: false })
         .returns<PostRow[]>();
       if (error) throw error;

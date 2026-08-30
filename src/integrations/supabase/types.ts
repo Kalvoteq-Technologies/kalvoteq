@@ -179,6 +179,51 @@ export type Database = {
           },
         ]
       }
+      content_sources: {
+        Row: {
+          category: string
+          created_at: string
+          enabled: boolean
+          feed_url: string
+          fetch_frequency_minutes: number
+          id: string
+          last_checked_at: string | null
+          last_error: string | null
+          name: string
+          source_type: Database["public"]["Enums"]["content_source_type"]
+          trust_score: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          enabled?: boolean
+          feed_url: string
+          fetch_frequency_minutes?: number
+          id?: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          name: string
+          source_type?: Database["public"]["Enums"]["content_source_type"]
+          trust_score?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          enabled?: boolean
+          feed_url?: string
+          fetch_frequency_minutes?: number
+          id?: string
+          last_checked_at?: string | null
+          last_error?: string | null
+          name?: string
+          source_type?: Database["public"]["Enums"]["content_source_type"]
+          trust_score?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       deliverables: {
         Row: {
           client_id: string
@@ -313,6 +358,78 @@ export type Database = {
         }
         Relationships: []
       }
+      discovered_stories: {
+        Row: {
+          author: string | null
+          category: string | null
+          created_at: string
+          discovered_at: string
+          external_id: string
+          id: string
+          overall_score: number
+          post_id: string | null
+          published_at: string | null
+          score_breakdown: Json
+          source_id: string
+          source_url: string
+          status: Database["public"]["Enums"]["discovered_story_status"]
+          summary: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          discovered_at?: string
+          external_id: string
+          id?: string
+          overall_score: number
+          post_id?: string | null
+          published_at?: string | null
+          score_breakdown?: Json
+          source_id: string
+          source_url: string
+          status?: Database["public"]["Enums"]["discovered_story_status"]
+          summary?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          discovered_at?: string
+          external_id?: string
+          id?: string
+          overall_score?: number
+          post_id?: string | null
+          published_at?: string | null
+          score_breakdown?: Json
+          source_id?: string
+          source_url?: string
+          status?: Database["public"]["Enums"]["discovered_story_status"]
+          summary?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discovered_stories_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discovered_stories_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "content_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           amount_cents: number
@@ -405,12 +522,17 @@ export type Database = {
           created_at: string
           excerpt: string
           id: string
+          origin: Database["public"]["Enums"]["post_origin"]
           published_at: string | null
           reading_time: string | null
+          research_job_id: string | null
           slug: string
           status: Database["public"]["Enums"]["post_status"]
           title: string
           updated_at: string
+          verification_status:
+            | Database["public"]["Enums"]["post_verification_status"]
+            | null
         }
         Insert: {
           author_id?: string | null
@@ -420,12 +542,17 @@ export type Database = {
           created_at?: string
           excerpt?: string
           id?: string
+          origin?: Database["public"]["Enums"]["post_origin"]
           published_at?: string | null
           reading_time?: string | null
+          research_job_id?: string | null
           slug: string
           status?: Database["public"]["Enums"]["post_status"]
           title: string
           updated_at?: string
+          verification_status?:
+            | Database["public"]["Enums"]["post_verification_status"]
+            | null
         }
         Update: {
           author_id?: string | null
@@ -435,12 +562,17 @@ export type Database = {
           created_at?: string
           excerpt?: string
           id?: string
+          origin?: Database["public"]["Enums"]["post_origin"]
           published_at?: string | null
           reading_time?: string | null
+          research_job_id?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["post_status"]
           title?: string
           updated_at?: string
+          verification_status?:
+            | Database["public"]["Enums"]["post_verification_status"]
+            | null
         }
         Relationships: [
           {
@@ -448,6 +580,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_research_job_id_fkey"
+            columns: ["research_job_id"]
+            isOneToOne: false
+            referencedRelation: "research_jobs"
             referencedColumns: ["id"]
           },
         ]
@@ -598,6 +737,50 @@ export type Database = {
           },
         ]
       }
+      research_jobs: {
+        Row: {
+          briefing: Json | null
+          completed_at: string | null
+          confidence_score: number | null
+          created_at: string
+          created_by: string | null
+          error: string | null
+          id: string
+          status: Database["public"]["Enums"]["research_job_status"]
+          story_id: string
+        }
+        Insert: {
+          briefing?: Json | null
+          completed_at?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["research_job_status"]
+          story_id: string
+        }
+        Update: {
+          briefing?: Json | null
+          completed_at?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["research_job_status"]
+          story_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_jobs_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "discovered_stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tags: {
         Row: {
           created_at: string
@@ -712,11 +895,22 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "client" | "developer"
+      content_source_type: "rss" | "api" | "manual"
+      discovered_story_status:
+        | "new"
+        | "researching"
+        | "researched"
+        | "drafted"
+        | "rejected"
+        | "archived"
       invoice_status: "draft" | "sent" | "paid" | "overdue"
       lead_status: "new" | "contacted" | "archived"
+      post_origin: "manual" | "ai"
       post_status: "draft" | "published"
+      post_verification_status: "verified" | "partially_verified" | "unverified"
       project_status: "discovery" | "in_progress" | "on_hold" | "delivered"
       request_status: "open" | "in_progress" | "resolved"
+      research_job_status: "pending" | "completed" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -848,11 +1042,23 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "client", "developer"],
+      content_source_type: ["rss", "api", "manual"],
+      discovered_story_status: [
+        "new",
+        "researching",
+        "researched",
+        "drafted",
+        "rejected",
+        "archived",
+      ],
       invoice_status: ["draft", "sent", "paid", "overdue"],
       lead_status: ["new", "contacted", "archived"],
+      post_origin: ["manual", "ai"],
       post_status: ["draft", "published"],
+      post_verification_status: ["verified", "partially_verified", "unverified"],
       project_status: ["discovery", "in_progress", "on_hold", "delivered"],
       request_status: ["open", "in_progress", "resolved"],
+      research_job_status: ["pending", "completed", "failed"],
     },
   },
 } as const

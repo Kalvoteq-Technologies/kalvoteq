@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
+import { researchJobQuery } from "@/lib/content-intelligence/research-jobs";
 import {
   categoriesQuery,
   imageSrc,
@@ -24,6 +25,18 @@ import {
   type PostStatus,
 } from "@/lib/blog";
 import { cn } from "@/lib/utils";
+
+const VERIFICATION_LABELS = {
+  verified: "Verified",
+  partially_verified: "Partially verified",
+  unverified: "Unverified",
+} as const;
+
+const VERIFICATION_BADGE_VARIANT = {
+  verified: "default",
+  partially_verified: "secondary",
+  unverified: "destructive",
+} as const;
 
 const schema = z.object({
   title: z.string().trim().min(3, "Title must be at least 3 characters").max(160),
@@ -38,6 +51,7 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
 
   const { data: categories = [] } = useQuery(categoriesQuery());
   const { data: allTags = [] } = useQuery(tagsQuery());
+  const { data: researchJob } = useQuery(researchJobQuery(post?.research_job_id));
 
   const [title, setTitle] = useState(post?.title ?? "");
   const [slug, setSlug] = useState(post?.slug ?? "");
@@ -50,6 +64,11 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
   const [newTag, setNewTag] = useState("");
   const [cover, setCover] = useState<string | null>(post?.cover_image_url ?? null);
   const [uploadingCover, setUploadingCover] = useState(false);
+
+  const blockedByVerification =
+    post?.origin === "ai" &&
+    post.verification_status === "unverified" &&
+    post.status !== "published";
 
   const save = useMutation({
     mutationFn: async (status: PostStatus) => {
@@ -203,13 +222,24 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
       <aside className="space-y-6">
         <div className="rounded-xl border border-border bg-card p-5">
           <p className="text-sm font-semibold">Status</p>
-          <Badge variant={post?.status === "published" ? "default" : "secondary"} className="mt-3">
-            {post?.status === "published" ? "Published" : "Draft"}
-          </Badge>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Badge variant={post?.status === "published" ? "default" : "secondary"}>
+              {post?.status === "published" ? "Published" : "Draft"}
+            </Badge>
+            {post?.origin === "ai" && <Badge variant="outline">AI-assisted</Badge>}
+          </div>
           <div className="mt-4 flex flex-col gap-2">
-            <Button disabled={save.isPending} onClick={() => save.mutate("published")}>
+            <Button
+              disabled={save.isPending || blockedByVerification}
+              onClick={() => save.mutate("published")}
+            >
               {post?.status === "published" ? "Update published post" : "Publish"}
             </Button>
+            {blockedByVerification && (
+              <p className="text-xs text-destructive">
+                This draft's sources are unverified — research it further before publishing.
+              </p>
+            )}
             <Button
               variant="outline"
               disabled={save.isPending}
@@ -231,6 +261,60 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
             )}
           </div>
         </div>
+
+        {post?.origin === "ai" && (
+          <div className="space-y-4 rounded-xl border border-border bg-card p-5">
+            <div>
+              <p className="text-sm font-semibold">Verification</p>
+              {post.verification_status && (
+                <Badge
+                  variant={VERIFICATION_BADGE_VARIANT[post.verification_status]}
+                  className="mt-2"
+                >
+                  {VERIFICATION_LABELS[post.verification_status]}
+                  {researchJob?.confidence_score != null &&
+                    ` · ${researchJob.confidence_score}/100`}
+                </Badge>
+              )}
+            </div>
+
+            {researchJob?.briefing && (
+              <>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Kalvoteq angle
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {researchJob.briefing.kalvoteq_angle || "Not applicable to this story."}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Sources
+                  </p>
+                  <ul className="mt-2 space-y-2">
+                    {researchJob.briefing.sources.map((s, i) => (
+                      <li key={i} className="text-sm">
+                        <a
+                          href={s.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-medium text-primary hover:underline"
+                        >
+                          {s.title}
+                        </a>
+                        <p className="text-xs text-muted-foreground">
+                          {s.publisher} {s.is_primary ? "· primary" : "· secondary"} · credibility{" "}
+                          {s.credibility_score}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         <div className="space-y-2 rounded-xl border border-border bg-card p-5">
           <Label htmlFor="slug">URL slug</Label>

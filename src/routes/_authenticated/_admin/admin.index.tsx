@@ -43,6 +43,9 @@ function AdminPage() {
         <Button asChild variant="outline">
           <Link to="/admin/leads">Leads</Link>
         </Button>
+        <Button asChild variant="outline">
+          <Link to="/admin/content">Content Intelligence</Link>
+        </Button>
         <Button asChild>
           <Link to="/admin/new">
             <Plus className="mr-1.5 h-4 w-4" /> New article
