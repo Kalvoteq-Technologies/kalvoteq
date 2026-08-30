@@ -37,17 +37,36 @@ const credentials = z.object({
   password: z.string().min(8, "Password must be at least 8 characters").max(72),
 });
 
+function defaultTargetForRoles(roles: readonly string[]): string {
+  if (roles.includes("admin")) return "/admin";
+  if (roles.includes("client")) return "/portal";
+  if (roles.includes("developer")) return "/workspace";
+  return "/";
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const { redirect } = useSearch({ from: "/auth" });
-  const { user, loading } = useAuth();
+  const { user, loading, roles, rolesLoading } = useAuth();
   const [busy, setBusy] = useState(false);
 
-  const target = redirect && redirect.startsWith("/") ? redirect : "/admin";
+  const explicitTarget = redirect && redirect.startsWith("/") ? redirect : null;
+
+  /** Sends the browser back to /auth so the role-aware redirect logic above decides the final landing page. */
+  function authReturnUrl(): string {
+    const base = `${window.location.origin}/auth`;
+    return explicitTarget ? `${base}?redirect=${encodeURIComponent(explicitTarget)}` : base;
+  }
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: target });
-  }, [loading, user, navigate, target]);
+    if (loading || !user) return;
+    if (explicitTarget) {
+      navigate({ to: explicitTarget });
+      return;
+    }
+    if (rolesLoading) return;
+    navigate({ to: defaultTargetForRoles(roles) });
+  }, [loading, user, rolesLoading, roles, navigate, explicitTarget]);
 
   async function submit(mode: "signin" | "signup", form: HTMLFormElement) {
     const data = new FormData(form);
@@ -69,7 +88,7 @@ function AuthPage() {
       } else {
         const { data: result, error } = await supabase.auth.signUp({
           ...parsed.data,
-          options: { emailRedirectTo: `${window.location.origin}${target}` },
+          options: { emailRedirectTo: authReturnUrl() },
         });
         if (error) throw error;
         if (!result.session) {
@@ -112,7 +131,7 @@ function AuthPage() {
     setBusy(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}${target}` },
+      options: { redirectTo: authReturnUrl() },
     });
     if (error) {
       setBusy(false);
