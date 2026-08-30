@@ -28,8 +28,8 @@ function verifyUrl(tokenHash: string, type: string, redirectTo: string): string 
 
 export async function dispatchAuthEmail(user: HookUser, emailData: HookEmailData): Promise<void> {
   const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
-  const { token, token_hash, token_new, token_hash_new, redirect_to, email_action_type, site_url } =
-    emailData;
+  const { SITE_URL } = await import("@/lib/welcome.shared");
+  const { token, token_hash, token_new, token_hash_new, redirect_to, email_action_type } = emailData;
 
   switch (email_action_type) {
     case "signup": {
@@ -37,7 +37,7 @@ export async function dispatchAuthEmail(user: HookUser, emailData: HookEmailData
       await sendTemplateEmail("auth-signup", user.email, {
         templateData: {
           siteName: SITE_NAME,
-          siteUrl: site_url,
+          siteUrl: SITE_URL,
           recipient: user.email,
           confirmationUrl: verifyUrl(token_hash, "signup", redirect_to),
         },
@@ -50,7 +50,7 @@ export async function dispatchAuthEmail(user: HookUser, emailData: HookEmailData
       await sendTemplateEmail("auth-invite", user.email, {
         templateData: {
           siteName: SITE_NAME,
-          siteUrl: site_url,
+          siteUrl: SITE_URL,
           confirmationUrl: verifyUrl(token_hash, "invite", redirect_to),
         },
         idempotencyKey: `auth-invite-${token_hash}`,
