@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { FileText, LifeBuoy, Receipt, Rocket } from "lucide-react";
+import { FileText, LifeBuoy, MessageSquareText, Receipt, Rocket } from "lucide-react";
 
 import { PageHero, Section } from "@/components/site/Primitives";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/hooks/useAuth";
+import { LEAD_STATUS_LABELS, myProjectRequestsQuery, myTalentRequestsQuery } from "@/lib/leads";
 import { myClientProfileQuery } from "@/lib/member-profiles";
 import {
   formatDate,
@@ -42,6 +43,24 @@ function ClientPortal() {
   const { data: deliverables = [] } = useQuery(myDeliverablesQuery(user?.id));
   const { data: requests = [] } = useQuery(myRequestsQuery(user?.id));
   const { data: invoices = [] } = useQuery(myInvoicesQuery(user?.id));
+  const { data: projectInquiries = [] } = useQuery(myProjectRequestsQuery(user?.email));
+  const { data: talentInquiries = [] } = useQuery(myTalentRequestsQuery(user?.email));
+  const inquiries = [
+    ...projectInquiries.map((i) => ({
+      id: i.id,
+      type: "Project" as const,
+      summary: i.project_type,
+      status: i.status,
+      created_at: i.created_at,
+    })),
+    ...talentInquiries.map((i) => ({
+      id: i.id,
+      type: "Talent" as const,
+      summary: i.required_role,
+      status: i.status,
+      created_at: i.created_at,
+    })),
+  ].sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
 
   const openRequests = requests.filter((r) => r.status !== "resolved").length;
   const outstanding = invoices
@@ -104,6 +123,36 @@ function ClientPortal() {
             </p>
           </Link>
         </div>
+
+        {inquiries.length > 0 && (
+          <>
+            <h2 className="mt-14 text-2xl font-bold">Your inquiries</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Requests you submitted before your account was set up.
+            </p>
+            <ul className="mt-6 divide-y divide-border rounded-xl border border-border bg-card">
+              {inquiries.map((inquiry) => (
+                <li
+                  key={`${inquiry.type}-${inquiry.id}`}
+                  className="flex flex-wrap items-center justify-between gap-4 p-5"
+                >
+                  <div className="flex items-center gap-3">
+                    <MessageSquareText className="h-4 w-4 text-primary" aria-hidden="true" />
+                    <div>
+                      <p className="font-semibold">
+                        {inquiry.type === "Project" ? "Project inquiry" : "Talent request"}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {inquiry.summary} · {formatDate(inquiry.created_at)}
+                      </p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary">{LEAD_STATUS_LABELS[inquiry.status]}</Badge>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         <h2 className="mt-14 text-2xl font-bold">Projects</h2>
         {projectsLoading ? (

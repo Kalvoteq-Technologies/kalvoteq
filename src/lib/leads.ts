@@ -95,6 +95,38 @@ export const careerApplicationsQuery = () =>
     },
   });
 
+/** Matches by email — connects a pre-onboarding lead to a client once they have an account. */
+export const myProjectRequestsQuery = (email: string | undefined) =>
+  queryOptions({
+    queryKey: ["leads", "mine", "project-requests", email],
+    enabled: Boolean(email),
+    queryFn: async (): Promise<ProjectRequestLead[]> => {
+      const { data, error } = await supabase
+        .from("project_requests")
+        .select("*")
+        .ilike("business_email", email!)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as ProjectRequestLead[];
+    },
+  });
+
+/** Matches by email — connects a pre-onboarding lead to a client once they have an account. */
+export const myTalentRequestsQuery = (email: string | undefined) =>
+  queryOptions({
+    queryKey: ["leads", "mine", "talent-requests", email],
+    enabled: Boolean(email),
+    queryFn: async (): Promise<TalentRequestLead[]> => {
+      const { data, error } = await supabase
+        .from("talent_requests")
+        .select("*")
+        .ilike("business_email", email!)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as TalentRequestLead[];
+    },
+  });
+
 export async function setTalentRequestStatus(id: string, status: LeadStatus): Promise<void> {
   const { error } = await supabase.from("talent_requests").update({ status }).eq("id", id);
   if (error) throw error;
