@@ -28,42 +28,7 @@ export interface DiscoveredStory {
   content_sources: { name: string } | null;
 }
 
-export interface ResearchSource {
-  title: string;
-  url: string;
-  publisher: string;
-  is_primary: boolean;
-  credibility_score: number;
-}
-
-export interface ResearchBriefing {
-  what_happened: string;
-  key_facts: string[];
-  timeline: string;
-  who_is_involved: string;
-  technical_details: string;
-  business_implications: string;
-  engineering_implications: string;
-  risks: string;
-  opportunities: string;
-  cto_considerations: string;
-  engineering_leader_considerations: string;
-  kalvoteq_angle: string;
-  sources: ResearchSource[];
-  confidence_score: number;
-  recommended_content_type: string;
-  recommendation_reason: string;
-}
-
-interface GeneratedArticle {
-  title: string;
-  excerpt: string;
-  content_html: string;
-  category_slug: string;
-  tag_slugs: string[];
-  seo_title: string;
-  meta_description: string;
-}
+export type { ResearchBriefing, ResearchSource, GeneratedArticle } from "./prompts";
 
 export const listDiscoveredStories = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -129,10 +94,14 @@ export const researchStory = createServerFn({ method: "POST" })
 
     try {
       const { generateJSON } = await import("@/lib/ai/anthropic.server");
-      const { RESEARCH_SYSTEM_PROMPT, buildResearchPrompt, researchToolSchema } =
-        await import("./prompts");
+      const {
+        RESEARCH_SYSTEM_PROMPT,
+        buildResearchPrompt,
+        researchToolSchema,
+        researchBriefingSchema,
+      } = await import("./prompts");
 
-      const briefing = await generateJSON<ResearchBriefing>(
+      const raw = await generateJSON<unknown>(
         RESEARCH_SYSTEM_PROMPT,
         buildResearchPrompt({
           title: story.title,
@@ -143,6 +112,9 @@ export const researchStory = createServerFn({ method: "POST" })
         }),
         researchToolSchema,
       );
+      // Claude's tool-use output is not guaranteed to match the schema even under a forced
+      // tool call — validate before this reaches the database or the editor UI.
+      const briefing = researchBriefingSchema.parse(raw);
 
       const { data: job, error: jobError } = await supabaseAdmin
         .from("research_jobs")
@@ -202,13 +174,14 @@ export const generateDraft = createServerFn({ method: "POST" })
       supabaseAdmin.from("tags").select("id, name, slug"),
     ]);
 
-    const briefing = job.briefing as unknown as ResearchBriefing;
+    const { researchBriefingSchema } = await import("./prompts");
+    const briefing = researchBriefingSchema.parse(job.briefing);
 
     const { generateJSON } = await import("@/lib/ai/anthropic.server");
-    const { ARTICLE_SYSTEM_PROMPT, buildArticlePrompt, articleToolSchema } =
+    const { ARTICLE_SYSTEM_PROMPT, buildArticlePrompt, articleToolSchema, generatedArticleSchema } =
       await import("./prompts");
 
-    const article = await generateJSON<GeneratedArticle>(
+    const rawArticle = await generateJSON<unknown>(
       ARTICLE_SYSTEM_PROMPT,
       buildArticlePrompt({
         storyTitle: story.title,
@@ -219,6 +192,7 @@ export const generateDraft = createServerFn({ method: "POST" })
       }),
       articleToolSchema,
     );
+    const article = generatedArticleSchema.parse(rawArticle);
 
     const category = (categories ?? []).find((c) => c.slug === article.category_slug);
     const matchedTags = (tags ?? []).filter((t) => article.tag_slugs.includes(t.slug));

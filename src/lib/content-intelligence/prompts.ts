@@ -1,6 +1,7 @@
 // Server-only: prompt text and structured-output schemas for the research and
 // article-generation steps. Kept separate from the calling code so the editorial
 // voice/rules can be reviewed and tuned without touching request plumbing.
+import { z } from "zod";
 
 const KALVOTEQ_CONTEXT = `Kalvoteq is an Estonia-based technology consulting and software engineering company.
 Positioning: "Kalvoteq helps companies BUILD technology and SCALE engineering capability."
@@ -146,6 +147,48 @@ export const researchToolSchema = {
   },
 };
 
+// Claude's tool-use output is not guaranteed to match `input_schema` exactly (a model can still
+// return malformed or partially-shaped JSON under a forced tool call). Validate before trusting it
+// anywhere downstream — an unvalidated briefing has previously produced a page-crashing draft.
+export const researchBriefingSchema = z.object({
+  what_happened: z.string(),
+  key_facts: z.array(z.string()),
+  timeline: z.string(),
+  who_is_involved: z.string(),
+  technical_details: z.string(),
+  business_implications: z.string(),
+  engineering_implications: z.string(),
+  risks: z.string(),
+  opportunities: z.string(),
+  cto_considerations: z.string(),
+  engineering_leader_considerations: z.string(),
+  kalvoteq_angle: z.string(),
+  sources: z.array(
+    z.object({
+      title: z.string(),
+      url: z.string(),
+      publisher: z.string(),
+      is_primary: z.boolean(),
+      credibility_score: z.number(),
+    }),
+  ),
+  confidence_score: z.number().min(0).max(100),
+  recommended_content_type: z.enum([
+    "no_content",
+    "linkedin_only",
+    "short_insight",
+    "full_article",
+    "technical_deep_dive",
+    "executive_brief",
+    "regulatory_explainer",
+    "trend_analysis",
+  ]),
+  recommendation_reason: z.string(),
+});
+
+export type ResearchSource = z.infer<typeof researchBriefingSchema>["sources"][number];
+export type ResearchBriefing = z.infer<typeof researchBriefingSchema>;
+
 export const ARTICLE_SYSTEM_PROMPT = `You are a senior editorial writer for Kalvoteq, a technology consultancy. You write for
 kalvoteq.com/insights, aimed at CTOs, engineering leaders, and technology decision-makers.
 
@@ -217,3 +260,15 @@ export const articleToolSchema = {
     ],
   },
 };
+
+export const generatedArticleSchema = z.object({
+  title: z.string().min(1),
+  excerpt: z.string().min(1),
+  content_html: z.string().min(1),
+  category_slug: z.string(),
+  tag_slugs: z.array(z.string()),
+  seo_title: z.string(),
+  meta_description: z.string(),
+});
+
+export type GeneratedArticle = z.infer<typeof generatedArticleSchema>;

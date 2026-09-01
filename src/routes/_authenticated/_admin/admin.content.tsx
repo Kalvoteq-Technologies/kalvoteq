@@ -24,6 +24,7 @@ import { aiPostsQuery, type PostRow } from "@/lib/blog";
 import {
   researchJobQuery,
   researchJobsByStoryQuery,
+  type ResearchJobSummary,
 } from "@/lib/content-intelligence/research-jobs";
 import {
   addSource,
@@ -182,7 +183,7 @@ function DiscoveredTab({
   jobsByStory,
 }: {
   stories: DiscoveredStory[];
-  jobsByStory: Record<string, { id: string; confidence_score: number | null }>;
+  jobsByStory: Record<string, ResearchJobSummary>;
 }) {
   const queryClient = useQueryClient();
   const doReject = useServerFn(rejectStory);
@@ -224,6 +225,16 @@ function DiscoveredTab({
     window.location.assign(`/admin/${postId}`);
   }
 
+  function handleGenerate(job: ResearchJobSummary) {
+    if (job.briefing?.recommended_content_type === "no_content") {
+      const proceed = window.confirm(
+        `Claude recommended NOT writing this up: "${job.briefing.recommendation_reason}"\n\nGenerate a draft anyway?`,
+      );
+      if (!proceed) return;
+    }
+    generate.mutate(job.id);
+  }
+
   const visible = stories.filter((s) => s.status !== "rejected" && s.status !== "archived");
 
   if (visible.length === 0) return <EmptyState label="discovered stories" />;
@@ -239,7 +250,7 @@ function DiscoveredTab({
             job={job}
             onReject={() => reject.mutate(story.id)}
             onResearch={() => research.mutate(story.id)}
-            onGenerate={() => job && generate.mutate(job.id)}
+            onGenerate={() => job && handleGenerate(job)}
             rejectPending={reject.isPending && reject.variables === story.id}
             researchPending={research.isPending && research.variables === story.id}
             generatePending={generate.isPending && generate.variables === job?.id}
@@ -269,7 +280,7 @@ function StoryRow({
   generatePending,
 }: {
   story: DiscoveredStory;
-  job: { id: string; confidence_score: number | null } | undefined;
+  job: ResearchJobSummary | undefined;
   onReject: () => void;
   onResearch: () => void;
   onGenerate: () => void;
@@ -343,6 +354,9 @@ function StoryRow({
           )}
           {story.status === "researched" && job && (
             <>
+              {job.briefing?.recommended_content_type === "no_content" && (
+                <span className="text-xs font-medium text-destructive">Claude: skip this one</span>
+              )}
               <Button size="sm" variant="ghost" onClick={() => setExpanded((v) => !v)}>
                 {expanded ? "Hide briefing" : "View briefing"}
               </Button>

@@ -15,17 +15,19 @@ export interface ResearchJobSummary {
   story_id: string;
   status: "pending" | "completed" | "failed";
   confidence_score: number | null;
+  briefing: ResearchBriefing | null;
 }
 
 // Latest research job per story, used to look up which job to hand to
-// generateDraft from the discovered-stories queue.
+// generateDraft from the discovered-stories queue, and to gate the "Generate
+// draft" action when Claude itself recommended not writing this one up.
 export const researchJobsByStoryQuery = () =>
   queryOptions({
     queryKey: ["research-jobs", "by-story"],
     queryFn: async (): Promise<Record<string, ResearchJobSummary>> => {
       const { data, error } = await supabase
         .from("research_jobs")
-        .select("id, story_id, status, confidence_score")
+        .select("id, story_id, status, confidence_score, briefing")
         .order("created_at", { ascending: false })
         .limit(300);
       if (error) throw error;

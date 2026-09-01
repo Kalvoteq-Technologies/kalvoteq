@@ -293,7 +293,10 @@ export function PostEditor({ post, userId }: { post?: PostRow; userId: string })
                     Sources
                   </p>
                   <ul className="mt-2 space-y-2">
-                    {researchJob.briefing.sources.map((s, i) => (
+                    {(Array.isArray(researchJob.briefing.sources)
+                      ? researchJob.briefing.sources
+                      : []
+                    ).map((s, i) => (
                       <li key={i} className="text-sm">
                         <a
                           href={s.url}
