@@ -32,20 +32,37 @@ export async function extractArticleText(url: string, anchorTitle?: string): Pro
 
 /**
  * Finds where the article's own title actually begins in the page text. The title
- * usually appears twice — once from a bare <title>/meta tag near the very top of
- * the document (before any real content), and again at the real headline. Skip a
- * near-the-start hit (the metadata echo) in favor of the next one; otherwise trust
- * the first hit found, since some pages only contain the title once.
+ * commonly appears several times — a bare <title>/meta echo near the top, possibly
+ * a "related/trending" widget link elsewhere, and the real headline — and which
+ * occurrence is which varies by site, so occurrence order is not a reliable signal.
+ * Instead, score the text following each occurrence for prose density (real article
+ * body reads as flowing sentences; nav rails and related-article lists read as short
+ * link fragments with few sentence-ending periods) and take the best-scoring one.
  */
 function findAnchoredStart(text: string, title: string): number {
   const needle = title.slice(0, 40).trim().toLowerCase();
   if (!needle) return -1;
   const lower = text.toLowerCase();
-  const first = lower.indexOf(needle);
-  if (first === -1) return -1;
-  if (first > 60) return first;
-  const second = lower.indexOf(needle, first + needle.length);
-  return second !== -1 ? second : first;
+
+  const positions: number[] = [];
+  let idx = lower.indexOf(needle);
+  while (idx !== -1 && positions.length < 8) {
+    positions.push(idx);
+    idx = lower.indexOf(needle, idx + needle.length);
+  }
+  if (positions.length === 0) return -1;
+
+  let best = -1;
+  let bestScore = -1;
+  for (const pos of positions) {
+    const window = text.slice(pos, pos + 1500);
+    const score = (window.match(/[.!?]\s/g) ?? []).length;
+    if (score > bestScore) {
+      bestScore = score;
+      best = pos;
+    }
+  }
+  return best;
 }
 
 function htmlToPlainText(html: string): string {
