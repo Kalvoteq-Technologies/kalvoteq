@@ -80,7 +80,12 @@ export const researchToolSchema = {
     type: "object" as const,
     properties: {
       what_happened: { type: "string", description: "2-4 sentence factual summary." },
-      key_facts: { type: "array", items: { type: "string" }, description: "3-8 bullet facts." },
+      key_facts: {
+        type: "array",
+        items: { type: "string" },
+        description:
+          "3-8 bullet facts, EACH AS ITS OWN ARRAY ELEMENT — not one string containing all of them.",
+      },
       timeline: { type: "string" },
       who_is_involved: { type: "string" },
       technical_details: { type: "string" },
@@ -157,9 +162,20 @@ export const researchToolSchema = {
 // Claude's tool-use output is not guaranteed to match `input_schema` exactly (a model can still
 // return malformed or partially-shaped JSON under a forced tool call). Validate before trusting it
 // anywhere downstream — an unvalidated briefing has previously produced a page-crashing draft.
+// Claude has repeatedly written key_facts as a single bulleted string instead of a JSON array,
+// even with a forced tool schema. Rather than keep failing on a purely cosmetic shape mismatch,
+// accept a string and split it into array items.
+const keyFactsField = z.preprocess((val) => {
+  if (typeof val !== "string") return val;
+  return val
+    .split(/\r?\n+/)
+    .map((line) => line.replace(/^[\s\-*•\d.)]+/, "").trim())
+    .filter(Boolean);
+}, z.array(z.string()).min(1));
+
 export const researchBriefingSchema = z.object({
   what_happened: z.string(),
-  key_facts: z.array(z.string()),
+  key_facts: keyFactsField,
   timeline: z.string(),
   who_is_involved: z.string(),
   technical_details: z.string(),

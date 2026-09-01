@@ -48,6 +48,11 @@ export async function generateJSON<T>(
     ],
     tool_choice: { type: "tool", name: schema.name },
   });
+  if (message.stop_reason === "max_tokens") {
+    console.warn(
+      `[anthropic] Response hit max_tokens (${maxTokens}) — output was likely truncated mid-field.`,
+    );
+  }
   const toolUse = message.content.find((b) => b.type === "tool_use");
   if (!toolUse || toolUse.type !== "tool_use") {
     throw new Error("Claude did not return the expected structured output");

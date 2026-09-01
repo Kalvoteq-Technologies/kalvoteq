@@ -38,11 +38,12 @@ async function generateValidated<T>(
   prompt: string,
   toolSchema: { name: string; description: string; input_schema: Record<string, unknown> },
   schema: z.ZodType<T>,
+  maxTokens?: number,
 ): Promise<T> {
   const { generateJSON } = await import("@/lib/ai/anthropic.server");
   let lastIssues = "";
   for (let attempt = 1; attempt <= 2; attempt++) {
-    const raw = await generateJSON<unknown>(system, prompt, toolSchema);
+    const raw = await generateJSON<unknown>(system, prompt, toolSchema, maxTokens);
     const result = schema.safeParse(raw);
     if (result.success) return result.data;
     lastIssues = result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
@@ -134,6 +135,7 @@ export const researchStory = createServerFn({ method: "POST" })
         }),
         researchToolSchema,
         researchBriefingSchema,
+        8000, // 15 substantive fields can exceed the default 4096-token budget on content-rich stories.
       );
 
       const { data: job, error: jobError } = await supabaseAdmin
@@ -214,6 +216,7 @@ export const generateDraft = createServerFn({ method: "POST" })
       }),
       articleToolSchema,
       generatedArticleSchema,
+      8000, // Up to 1,800 words of article HTML plus metadata can exceed the default budget.
     );
 
     const category = (categories ?? []).find((c) => c.slug === article.category_slug);
