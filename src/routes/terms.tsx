@@ -52,12 +52,6 @@ export const Route = createFileRoute("/terms")({
           .
         </li>
       </ul>
-      <h2>AI-assisted content</h2>
-      <p>
-        Some articles published on kalvoteq Insights are researched and drafted with AI assistance
-        as part of our editorial process. Every such article is reviewed and approved by our
-        editorial team before publication, and cites its sources.
-      </p>
       <h2>Intellectual property</h2>
       <p>
         All site content is owned by {company.legalName} unless stated otherwise. Deliverables

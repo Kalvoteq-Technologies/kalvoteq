@@ -55,13 +55,6 @@ export const Route = createFileRoute("/privacy")({
         <li>To send you our newsletter where you have opted in (consent).</li>
         <li>To secure and improve the website and portal (legitimate interest).</li>
       </ul>
-      <h2>AI-assisted content research</h2>
-      <p>
-        Some kalvoteq Insights articles are researched and drafted with AI assistance as part of our
-        editorial process, and reviewed and approved by our team before publication. This processing
-        applies to publicly available third-party articles we research, not to your personal data —
-        we do not send enquiry, account, or engagement data to AI tools as part of this process.
-      </p>
       <h2>Retention</h2>
       <p>
         Enquiry data is kept for 24 months. Job applications are kept for 6 months unless you ask us
@@ -79,9 +72,9 @@ export const Route = createFileRoute("/privacy")({
       <p>
         Data is hosted in the European Union by default. We use a small number of subprocessors to
         run this website and portal: Supabase (database, authentication, and file storage), Resend
-        (transactional email), Google (optional sign-in), and Anthropic (AI-assisted editorial
-        research, described above). Where a subprocessor operates outside the EEA, we rely on
-        standard contractual clauses and document the transfer in our data processing agreement.
+        (transactional email), and Google (optional sign-in). Where a subprocessor operates outside
+        the EEA, we rely on standard contractual clauses and document the transfer in our data
+        processing agreement.
       </p>
       <h2>Contact</h2>
       <p>
