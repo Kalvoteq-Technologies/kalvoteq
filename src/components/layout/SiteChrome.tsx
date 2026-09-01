@@ -31,11 +31,11 @@ export function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (!window.localStorage.getItem("cookie-consent")) setVisible(true);
+    if (!window.localStorage.getItem("cookie-notice-seen")) setVisible(true);
   }, []);
 
-  const decide = (value: "accepted" | "essential") => {
-    window.localStorage.setItem("cookie-consent", value);
+  const dismiss = () => {
+    window.localStorage.setItem("cookie-notice-seen", "true");
     setVisible(false);
   };
 
@@ -44,30 +44,21 @@ export function CookieBanner() {
   return (
     <div
       role="dialog"
-      aria-label="Cookie consent"
+      aria-label="Cookie notice"
       className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-3xl rounded-lg border border-border bg-card p-5 shadow-xl sm:flex sm:items-center sm:gap-6"
     >
       <p className="text-sm text-muted-foreground">
-        We use essential cookies to run this site and optional analytics cookies to improve it. Read
-        our{" "}
+        We only use essential cookies to run this site — no analytics or tracking. Read our{" "}
         <Link to="/cookies" className="font-medium text-primary underline-offset-4 hover:underline">
           cookie policy
         </Link>
         .
       </p>
       <div className="mt-4 flex shrink-0 gap-2 sm:mt-0">
-        <Button variant="outline" size="sm" onClick={() => decide("essential")}>
-          Essential only
+        <Button size="sm" onClick={dismiss}>
+          Got it
         </Button>
-        <Button size="sm" onClick={() => decide("accepted")}>
-          Accept all
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Dismiss cookie banner"
-          onClick={() => decide("essential")}
-        >
+        <Button variant="ghost" size="icon" aria-label="Dismiss cookie notice" onClick={dismiss}>
           <X className="h-4 w-4" />
         </Button>
       </div>

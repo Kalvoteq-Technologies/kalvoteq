@@ -21,26 +21,27 @@ export const Route = createFileRoute("/cookies")({
     links: [{ rel: "canonical", href: "/cookies" }],
   }),
   component: () => (
-    <LegalPage eyebrow="Legal" title="Cookie Policy" updated="1 June 2026">
+    <LegalPage eyebrow="Legal" title="Cookie Policy" updated="1 September 2026">
       <p>
-        We keep cookies to a minimum. Optional cookies are set only after you accept them in the
-        consent banner, and your choice is stored locally in your browser.
+        We keep cookies to a minimum. We do not currently use analytics, advertising, or cross-site
+        tracking cookies of any kind. If that changes, we will update this policy and ask for your
+        consent before setting anything beyond what is listed below.
       </p>
-      <h2>Essential cookies</h2>
+      <h2>Essential cookies and local storage</h2>
       <ul>
-        <li>Consent preference — remembers your cookie choice.</li>
+        <li>Cookie notice preference — remembers that you have seen this notice.</li>
         <li>Theme preference — remembers light or dark mode.</li>
+        <li>
+          If you sign in to the client or developer portal, a session cookie that keeps you
+          authenticated.
+        </li>
         <li>Security and load-balancing cookies set by our hosting provider.</li>
       </ul>
-      <h2>Optional analytics</h2>
-      <p>
-        When accepted, we use privacy-respecting analytics to understand which pages are useful. We
-        do not sell data, run advertising networks, or build cross-site profiles.
-      </p>
       <h2>Managing cookies</h2>
       <p>
-        You can clear site data at any time in your browser settings, which resets your consent
-        choice and shows the banner again. Blocking essential cookies may break parts of the site.
+        You can clear site data at any time in your browser settings, which resets your preferences
+        and shows the notice again. Blocking essential cookies may break parts of the site,
+        including signing in to the portal.
       </p>
       <h2>Questions</h2>
       <p>Write to {company.email} and we will answer within five working days.</p>
