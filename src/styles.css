@@ -220,6 +220,23 @@
   }
 }
 
+@utility ticker-track {
+  animation: kalvoteq-marquee 42s linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes kalvoteq-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @utility prose-article {
   color: var(--color-foreground);
   font-size: 1.0625rem;

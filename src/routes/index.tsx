@@ -6,6 +6,7 @@ import heroImage from "@/assets/hero-network.jpg";
 import { BuildScaleCards } from "@/components/site/BuildScaleCards";
 import { EngagementModels } from "@/components/site/EngagementModels";
 import { CTASection, Section } from "@/components/site/Primitives";
+import { TechInsightsTicker } from "@/components/site/TechInsightsTicker";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ import {
   services,
   technologyExpertise,
 } from "@/data/site";
+import { tickerItems } from "@/data/ticker";
 import { imageSrc, publishedPostsQuery } from "@/lib/blog";
 
 export const Route = createFileRoute("/")({
@@ -166,6 +168,7 @@ function HomePage() {
 
   return (
     <>
+      <TechInsightsTicker items={tickerItems} />
       <Hero />
       <BuiltForAmbitiousTeams />
 
