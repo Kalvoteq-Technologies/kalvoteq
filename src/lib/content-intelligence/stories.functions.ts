@@ -30,6 +30,29 @@ export interface DiscoveredStory {
 
 export type { ResearchBriefing, ResearchSource, GeneratedArticle } from "./prompts";
 
+// Claude's tool-use output is not guaranteed to match input_schema even under a forced tool
+// call — observed in practice when the source material is thin and the model has little to
+// report. Validate and retry once before giving up, rather than trusting the first response.
+async function generateValidated<T>(
+  system: string,
+  prompt: string,
+  toolSchema: { name: string; description: string; input_schema: Record<string, unknown> },
+  schema: z.ZodType<T>,
+): Promise<T> {
+  const { generateJSON } = await import("@/lib/ai/anthropic.server");
+  let lastIssues = "";
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const raw = await generateJSON<unknown>(system, prompt, toolSchema);
+    const result = schema.safeParse(raw);
+    if (result.success) return result.data;
+    lastIssues = result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
+    console.warn(
+      `[content-intelligence] Structured output failed validation (attempt ${attempt}/2): ${lastIssues}`,
+    );
+  }
+  throw new Error(`Claude's response did not match the expected format: ${lastIssues}`);
+}
+
 export const listDiscoveredStories = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }): Promise<DiscoveredStory[]> => {
@@ -93,7 +116,6 @@ export const researchStory = createServerFn({ method: "POST" })
     }
 
     try {
-      const { generateJSON } = await import("@/lib/ai/anthropic.server");
       const {
         RESEARCH_SYSTEM_PROMPT,
         buildResearchPrompt,
@@ -101,7 +123,7 @@ export const researchStory = createServerFn({ method: "POST" })
         researchBriefingSchema,
       } = await import("./prompts");
 
-      const raw = await generateJSON<unknown>(
+      const briefing = await generateValidated(
         RESEARCH_SYSTEM_PROMPT,
         buildResearchPrompt({
           title: story.title,
@@ -111,10 +133,8 @@ export const researchStory = createServerFn({ method: "POST" })
           extractedText,
         }),
         researchToolSchema,
+        researchBriefingSchema,
       );
-      // Claude's tool-use output is not guaranteed to match the schema even under a forced
-      // tool call — validate before this reaches the database or the editor UI.
-      const briefing = researchBriefingSchema.parse(raw);
 
       const { data: job, error: jobError } = await supabaseAdmin
         .from("research_jobs")
@@ -174,14 +194,16 @@ export const generateDraft = createServerFn({ method: "POST" })
       supabaseAdmin.from("tags").select("id, name, slug"),
     ]);
 
-    const { researchBriefingSchema } = await import("./prompts");
+    const {
+      researchBriefingSchema,
+      ARTICLE_SYSTEM_PROMPT,
+      buildArticlePrompt,
+      articleToolSchema,
+      generatedArticleSchema,
+    } = await import("./prompts");
     const briefing = researchBriefingSchema.parse(job.briefing);
 
-    const { generateJSON } = await import("@/lib/ai/anthropic.server");
-    const { ARTICLE_SYSTEM_PROMPT, buildArticlePrompt, articleToolSchema, generatedArticleSchema } =
-      await import("./prompts");
-
-    const rawArticle = await generateJSON<unknown>(
+    const article = await generateValidated(
       ARTICLE_SYSTEM_PROMPT,
       buildArticlePrompt({
         storyTitle: story.title,
@@ -191,8 +213,8 @@ export const generateDraft = createServerFn({ method: "POST" })
         tags: tags ?? [],
       }),
       articleToolSchema,
+      generatedArticleSchema,
     );
-    const article = generatedArticleSchema.parse(rawArticle);
 
     const category = (categories ?? []).find((c) => c.slug === article.category_slug);
     const matchedTags = (tags ?? []).filter((t) => article.tag_slugs.includes(t.slug));

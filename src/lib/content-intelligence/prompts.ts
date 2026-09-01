@@ -44,7 +44,14 @@ ${HOUSE_RULES}
 You are given the discovered story's own summary and the extracted text of its source article as
 your primary evidence. Base every factual claim in the briefing on that text; do not introduce
 outside claims you cannot support. If the source material is thin, say so in your confidence
-assessment rather than inventing detail.`;
+assessment rather than inventing detail.
+
+Always call submit_research_briefing with every field populated, even when the extracted text is
+mostly unusable (e.g. only navigation, cookie banners, or unrelated teasers, with no real article
+body). In that case, write short honest values like "Not available from the extracted source" for
+the fields you cannot support, set confidence_score low (under 30), and set
+recommended_content_type to "no_content" — do not omit fields, and do not write anything outside
+the tool call.`;
 
 export function buildResearchPrompt(input: {
   title: string;
