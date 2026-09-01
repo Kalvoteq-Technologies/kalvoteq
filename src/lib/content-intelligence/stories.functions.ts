@@ -110,7 +110,7 @@ export const researchStory = createServerFn({ method: "POST" })
     let extractedText = story.summary ?? "";
     try {
       const { extractArticleText } = await import("./extract.server");
-      extractedText = await extractArticleText(story.source_url);
+      extractedText = await extractArticleText(story.source_url, story.title);
     } catch (err) {
       console.warn("[content-intelligence] Extraction failed, using feed summary only", err);
     }

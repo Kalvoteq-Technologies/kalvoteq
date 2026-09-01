@@ -66,7 +66,7 @@ PUBLISHED: ${input.publishedAt ?? "unknown"}
 
 SOURCE ARTICLE TEXT (extracted, may include noise — use only what is clearly article content):
 """
-${input.extractedText.slice(0, 12000)}
+${input.extractedText.slice(0, 16000)}
 """
 
 Produce a research briefing on this development for Kalvoteq's editorial team, and recommend what
