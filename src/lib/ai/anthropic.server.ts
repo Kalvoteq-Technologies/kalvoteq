@@ -2,6 +2,7 @@
 // place that knows which provider/model is in use, so swapping providers later
 // only touches this file.
 import Anthropic from "@anthropic-ai/sdk";
+import type { z } from "zod";
 
 function client(): Anthropic {
   const apiKey = process.env["ANTHROPIC_API_KEY"];
@@ -58,4 +59,27 @@ export async function generateJSON<T>(
     throw new Error("Claude did not return the expected structured output");
   }
   return toolUse.input as T;
+}
+
+// Claude's tool-use output is not guaranteed to match input_schema even under a forced tool
+// call — observed in practice when the source material is thin and the model has little to
+// report. Validate and retry once before giving up, rather than trusting the first response.
+export async function generateValidated<T>(
+  system: string,
+  prompt: string,
+  toolSchema: { name: string; description: string; input_schema: Record<string, unknown> },
+  schema: z.ZodType<T>,
+  maxTokens?: number,
+): Promise<T> {
+  let lastIssues = "";
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const raw = await generateJSON<unknown>(system, prompt, toolSchema, maxTokens);
+    const result = schema.safeParse(raw);
+    if (result.success) return result.data;
+    lastIssues = result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
+    console.warn(
+      `[anthropic] Structured output failed validation (attempt ${attempt}/2): ${lastIssues}`,
+    );
+  }
+  throw new Error(`Claude's response did not match the expected format: ${lastIssues}`);
 }

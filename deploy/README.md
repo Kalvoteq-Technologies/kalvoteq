@@ -63,3 +63,42 @@ default, so the cron job would silently no-op against the apex domain.
 
 Research and draft generation are triggered manually from `/admin/content` and are not scheduled —
 publishing stays behind human review by default.
+
+## LinkedIn publishing
+
+Add to `.env.production`:
+
+```env
+LINKEDIN_CLIENT_ID=your-linkedin-app-client-id
+LINKEDIN_CLIENT_SECRET=your-linkedin-app-client-secret
+LINKEDIN_REDIRECT_URI=https://APP_DOMAIN/api/auth/linkedin/callback
+LINKEDIN_TOKEN_ENCRYPTION_KEY=32-random-bytes-base64-encoded
+```
+
+Generate `LINKEDIN_TOKEN_ENCRYPTION_KEY` once with:
+
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+Getting the LinkedIn app credentials is a manual, LinkedIn-side process (not something this app can
+automate):
+
+1. At developer.linkedin.com, create a developer app associated with the Kalvoteq Company Page (you
+   must be an admin of that page).
+2. Request access to the **Community Management API** product. LinkedIn's Development tier (the
+   default, no review needed beyond the initial approval) allows 500 API calls/day for the app and
+   100/day per admin — comfortably enough for a few posts a week. The heavier "Standard tier"
+   screencast review is not needed at this volume.
+3. The approval form requires a **business email on your own domain** (a personal address is
+   rejected) plus your legal company name, registered address, website, and privacy policy URL.
+4. Once approved, copy the app's Client ID and Client Secret into `.env.production`, and register
+   `LINKEDIN_REDIRECT_URI` as an authorized redirect URL on the app.
+
+After that, connecting is done from the app itself: `/admin/content` → LinkedIn tab → Connect
+LinkedIn, which runs the OAuth flow and stores the tokens (AES-256-GCM encrypted) in the
+`linkedin_accounts` table. Tokens are never exposed to any client, including the admin UI — only a
+connected/disconnected status and the organization name are ever returned to the browser.
+
+Access tokens expire after 60 days and are refreshed automatically on next use; refresh tokens last
+365 days. If the refresh token itself expires, reconnecting from the LinkedIn tab is the fix.

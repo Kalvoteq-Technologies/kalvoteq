@@ -54,6 +54,7 @@ import { Route as AuthenticatedAdminAdminDocumentsRouteImport } from './routes/_
 import { Route as AuthenticatedAdminAdminLeadsRouteImport } from './routes/_authenticated/_admin/admin.leads'
 import { Route as AuthenticatedAdminAdminNewRouteImport } from './routes/_authenticated/_admin/admin.new'
 import { Route as AuthenticatedAdminAdminTeamRouteImport } from './routes/_authenticated/_admin/admin.team'
+import { Route as ApiAuthLinkedinCallbackRouteImport } from './routes/api/auth/linkedin/callback'
 import { Route as ApiPublicBlogImageSplatRouteImport } from './routes/api/public/blog-image.$'
 
 const IndexRoute = IndexRouteImport.update({
@@ -296,6 +297,11 @@ const AuthenticatedAdminAdminTeamRoute =
     path: '/admin/team',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const ApiAuthLinkedinCallbackRoute = ApiAuthLinkedinCallbackRouteImport.update({
+  id: '/api/auth/linkedin/callback',
+  path: '/api/auth/linkedin/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicBlogImageSplatRoute = ApiPublicBlogImageSplatRouteImport.update({
   id: '/api/public/blog-image/$',
   path: '/api/public/blog-image/$',
@@ -343,6 +349,7 @@ export interface FileRoutesByFullPath {
   '/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
   '/admin/new': typeof AuthenticatedAdminAdminNewRoute
   '/admin/team': typeof AuthenticatedAdminAdminTeamRoute
+  '/api/auth/linkedin/callback': typeof ApiAuthLinkedinCallbackRoute
   '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
   '/admin/': typeof AuthenticatedAdminAdminIndexRoute
 }
@@ -387,6 +394,7 @@ export interface FileRoutesByTo {
   '/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
   '/admin/new': typeof AuthenticatedAdminAdminNewRoute
   '/admin/team': typeof AuthenticatedAdminAdminTeamRoute
+  '/api/auth/linkedin/callback': typeof ApiAuthLinkedinCallbackRoute
   '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
   '/admin': typeof AuthenticatedAdminAdminIndexRoute
 }
@@ -436,6 +444,7 @@ export interface FileRoutesById {
   '/_authenticated/_admin/admin/leads': typeof AuthenticatedAdminAdminLeadsRoute
   '/_authenticated/_admin/admin/new': typeof AuthenticatedAdminAdminNewRoute
   '/_authenticated/_admin/admin/team': typeof AuthenticatedAdminAdminTeamRoute
+  '/api/auth/linkedin/callback': typeof ApiAuthLinkedinCallbackRoute
   '/api/public/blog-image/$': typeof ApiPublicBlogImageSplatRoute
   '/_authenticated/_admin/admin/': typeof AuthenticatedAdminAdminIndexRoute
 }
@@ -482,6 +491,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/new'
     | '/admin/team'
+    | '/api/auth/linkedin/callback'
     | '/api/public/blog-image/$'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -526,6 +536,7 @@ export interface FileRouteTypes {
     | '/admin/leads'
     | '/admin/new'
     | '/admin/team'
+    | '/api/auth/linkedin/callback'
     | '/api/public/blog-image/$'
     | '/admin'
   id:
@@ -574,6 +585,7 @@ export interface FileRouteTypes {
     | '/_authenticated/_admin/admin/leads'
     | '/_authenticated/_admin/admin/new'
     | '/_authenticated/_admin/admin/team'
+    | '/api/auth/linkedin/callback'
     | '/api/public/blog-image/$'
     | '/_authenticated/_admin/admin/'
   fileRoutesById: FileRoutesById
@@ -604,6 +616,7 @@ export interface RootRouteChildren {
   ServicesIndexRoute: typeof ServicesIndexRoute
   ApiAuthEmailHookRoute: typeof ApiAuthEmailHookRoute
   ApiInternalContentDiscoverRoute: typeof ApiInternalContentDiscoverRoute
+  ApiAuthLinkedinCallbackRoute: typeof ApiAuthLinkedinCallbackRoute
   ApiPublicBlogImageSplatRoute: typeof ApiPublicBlogImageSplatRoute
 }
 
@@ -924,6 +937,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAdminTeamRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/api/auth/linkedin/callback': {
+      id: '/api/auth/linkedin/callback'
+      path: '/api/auth/linkedin/callback'
+      fullPath: '/api/auth/linkedin/callback'
+      preLoaderRoute: typeof ApiAuthLinkedinCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/blog-image/$': {
       id: '/api/public/blog-image/$'
       path: '/api/public/blog-image/$'
@@ -1052,6 +1072,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesIndexRoute: ServicesIndexRoute,
   ApiAuthEmailHookRoute: ApiAuthEmailHookRoute,
   ApiInternalContentDiscoverRoute: ApiInternalContentDiscoverRoute,
+  ApiAuthLinkedinCallbackRoute: ApiAuthLinkedinCallbackRoute,
   ApiPublicBlogImageSplatRoute: ApiPublicBlogImageSplatRoute,
 }
 export const routeTree = rootRouteImport

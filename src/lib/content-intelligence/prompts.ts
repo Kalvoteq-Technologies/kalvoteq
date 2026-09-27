@@ -3,7 +3,9 @@
 // voice/rules can be reviewed and tuned without touching request plumbing.
 import { z } from "zod";
 
-const KALVOTEQ_CONTEXT = `Kalvoteq is an Estonia-based technology consulting and software engineering company.
+// Exported for reuse by other generators that need the same editorial voice
+// (e.g. LinkedIn post generation) without duplicating or drifting from this text.
+export const KALVOTEQ_CONTEXT = `Kalvoteq is an Estonia-based technology consulting and software engineering company.
 Positioning: "Kalvoteq helps companies BUILD technology and SCALE engineering capability."
 
 BUILD (Kalvoteq delivers technology): Custom Software Development, Enterprise Software, Mobile
@@ -17,7 +19,7 @@ Use the BUILD/SCALE framing only when a development genuinely connects to "how s
 architect or implement this" (BUILD) or "what engineering capability will this require" (SCALE).
 Do not force either into an article where it is not the natural angle.`;
 
-const HOUSE_RULES = `Strict rules, no exceptions:
+export const HOUSE_RULES = `Strict rules, no exceptions:
 - Never copy, closely paraphrase, or spin source text. Write original synthesis in your own words.
 - Never fabricate statistics, quotes, customer examples, Kalvoteq achievements, or testimonials.
 - Never invent sources or attribute claims to a source that did not make them.

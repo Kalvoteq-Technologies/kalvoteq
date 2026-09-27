@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, ExternalLink, Inbox, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -20,7 +20,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { aiPostsQuery, type PostRow } from "@/lib/blog";
+import { Textarea } from "@/components/ui/textarea";
+import { aiPostsQuery, publishedPostsQuery, type PostRow } from "@/lib/blog";
 import {
   researchJobQuery,
   researchJobsByStoryQuery,
@@ -39,6 +40,16 @@ import {
   researchStory,
   type DiscoveredStory,
 } from "@/lib/content-intelligence/stories.functions";
+import {
+  disconnectLinkedIn,
+  generateLinkedInPost,
+  getLinkedInAuthUrl,
+  getLinkedInStatus,
+  listSocialPosts,
+  publishSocialPost,
+  updateSocialPostContent,
+  type SocialPostRow,
+} from "@/lib/linkedin/linkedin.functions";
 
 export const Route = createFileRoute("/_authenticated/_admin/admin/content")({
   head: () => ({
@@ -93,7 +104,7 @@ function useSources() {
 }
 
 function ContentIntelligencePage() {
-  const [tab, setTab] = useState<"discovered" | "drafts" | "sources">("discovered");
+  const [tab, setTab] = useState<"discovered" | "drafts" | "sources" | "linkedin">("discovered");
   const { data: stories = [] } = useDiscoveredStories();
   const { data: aiPosts = [] } = useQuery(aiPostsQuery());
   const { data: jobsByStory = {} } = useQuery(researchJobsByStoryQuery());
@@ -143,6 +154,7 @@ function ContentIntelligencePage() {
             <TabsTrigger value="discovered">Discovered ({stories.length})</TabsTrigger>
             <TabsTrigger value="drafts">Drafts ({aiPosts.length})</TabsTrigger>
             <TabsTrigger value="sources">Sources</TabsTrigger>
+            <TabsTrigger value="linkedin">LinkedIn</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -150,6 +162,7 @@ function ContentIntelligencePage() {
           {tab === "discovered" && <DiscoveredTab stories={stories} jobsByStory={jobsByStory} />}
           {tab === "drafts" && <DraftsTab posts={aiPosts} />}
           {tab === "sources" && <SourcesTab />}
+          {tab === "linkedin" && <LinkedInTab />}
         </div>
       </Section>
     </>
@@ -556,6 +569,246 @@ function SourcesTab() {
             </li>
           ))}
         </ul>
+      )}
+    </div>
+  );
+}
+
+/* --------------------------------- linkedin ---------------------------------- */
+
+function useLinkedInStatus() {
+  const fetchStatus = useServerFn(getLinkedInStatus);
+  return useQuery({ queryKey: ["linkedin", "status"], queryFn: () => fetchStatus() });
+}
+
+function useSocialPosts() {
+  const fetchPosts = useServerFn(listSocialPosts);
+  return useQuery({ queryKey: ["linkedin", "social-posts"], queryFn: () => fetchPosts() });
+}
+
+function LinkedInTab() {
+  const queryClient = useQueryClient();
+  const { data: status } = useLinkedInStatus();
+  const { data: publishedPosts = [] } = useQuery(publishedPostsQuery());
+  const { data: socialPosts = [] } = useSocialPosts();
+
+  const doAuthUrl = useServerFn(getLinkedInAuthUrl);
+  const doDisconnect = useServerFn(disconnectLinkedIn);
+  const doGenerate = useServerFn(generateLinkedInPost);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const result = params.get("linkedin");
+    if (result === "connected") {
+      toast.success("LinkedIn connected");
+      void queryClient.invalidateQueries({ queryKey: ["linkedin"] });
+    } else if (result === "error") {
+      toast.error(
+        `LinkedIn connection failed: ${params.get("linkedin_message") ?? "unknown error"}`,
+      );
+    }
+    if (result) {
+      params.delete("linkedin");
+      params.delete("linkedin_message");
+      const qs = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+    }
+    // Only ever needs to run once, on the redirect back from LinkedIn.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const connect = useMutation({
+    mutationFn: async () => {
+      const { url } = await doAuthUrl();
+      window.location.href = url;
+    },
+    onError: (e: Error) => toast.error(e.message || "Could not start the LinkedIn connection"),
+  });
+
+  const disconnect = useMutation({
+    mutationFn: () => doDisconnect(),
+    onSuccess: () => {
+      toast.success("LinkedIn disconnected");
+      void queryClient.invalidateQueries({ queryKey: ["linkedin"] });
+    },
+    onError: () => toast.error("Could not disconnect LinkedIn"),
+  });
+
+  const generate = useMutation({
+    mutationFn: (postId: string) => doGenerate({ data: { postId } }),
+    onSuccess: () => {
+      toast.success("LinkedIn post drafted");
+      void queryClient.invalidateQueries({ queryKey: ["linkedin", "social-posts"] });
+    },
+    onError: (e: Error) => toast.error(e.message || "Could not draft a LinkedIn post"),
+  });
+
+  const socialByPostId = new Map(socialPosts.map((sp) => [sp.post_id, sp]));
+
+  return (
+    <div className="space-y-8">
+      <div className="rounded-xl border border-border bg-card p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-semibold">LinkedIn Company Page</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {status?.connected
+                ? `Connected — posting as ${status.organizationName}`
+                : "Not connected — connect a Company Page to publish posts from here."}
+            </p>
+          </div>
+          {status?.connected ? (
+            <Button
+              variant="outline"
+              disabled={disconnect.isPending}
+              onClick={() => disconnect.mutate()}
+            >
+              Disconnect
+            </Button>
+          ) : (
+            <Button disabled={connect.isPending} onClick={() => connect.mutate()}>
+              Connect LinkedIn
+            </Button>
+          )}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-sm font-semibold">Published articles</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Turn any published article into a LinkedIn post — reviewed and edited here before it goes
+          out.
+        </p>
+
+        {publishedPosts.length === 0 ? (
+          <EmptyState label="published articles" />
+        ) : (
+          <ul className="mt-4 divide-y divide-border rounded-xl border border-border bg-card">
+            {publishedPosts.map((post) => {
+              const social = socialByPostId.get(post.id);
+              return (
+                <li key={post.id} className="p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold">{post.title}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Published{" "}
+                        {post.published_at
+                          ? new Date(post.published_at).toLocaleDateString("en-GB")
+                          : "—"}
+                      </p>
+                    </div>
+                    {social ? (
+                      <Badge
+                        variant={
+                          social.status === "published"
+                            ? "default"
+                            : social.status === "failed"
+                              ? "destructive"
+                              : "secondary"
+                        }
+                      >
+                        {social.status}
+                      </Badge>
+                    ) : (
+                      <Button
+                        size="sm"
+                        disabled={generate.isPending && generate.variables === post.id}
+                        onClick={() => generate.mutate(post.id)}
+                      >
+                        {generate.isPending && generate.variables === post.id
+                          ? "Drafting…"
+                          : "Generate LinkedIn post"}
+                      </Button>
+                    )}
+                  </div>
+                  {social && (
+                    <SocialPostEditor row={social} canPublish={Boolean(status?.connected)} />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SocialPostEditor({ row, canPublish }: { row: SocialPostRow; canPublish: boolean }) {
+  const queryClient = useQueryClient();
+  const [content, setContent] = useState(row.content);
+  const doUpdateContent = useServerFn(updateSocialPostContent);
+  const doPublish = useServerFn(publishSocialPost);
+
+  const invalidate = () =>
+    void queryClient.invalidateQueries({ queryKey: ["linkedin", "social-posts"] });
+
+  const save = useMutation({
+    mutationFn: () => doUpdateContent({ data: { id: row.id, content } }),
+    onSuccess: () => {
+      toast.success("Saved");
+      invalidate();
+    },
+    onError: () => toast.error("Could not save changes"),
+  });
+
+  const publish = useMutation({
+    mutationFn: () => doPublish({ data: { id: row.id } }),
+    onSuccess: () => {
+      toast.success("Published to LinkedIn");
+      invalidate();
+    },
+    onError: (e: Error) => {
+      toast.error(e.message || "Could not publish to LinkedIn");
+      invalidate();
+    },
+  });
+
+  return (
+    <div className="mt-4 space-y-3 rounded-lg border border-border bg-muted/40 p-4">
+      <Textarea
+        value={content}
+        onChange={(e) => setContent(e.target.value)}
+        rows={6}
+        disabled={row.status === "published"}
+        className="bg-background text-sm"
+      />
+      {row.status === "failed" && row.error && (
+        <p className="text-xs text-destructive">Last attempt failed: {row.error}</p>
+      )}
+      {row.status === "published" && row.external_post_id && (
+        <p className="text-xs text-muted-foreground">Published — id {row.external_post_id}</p>
+      )}
+      {row.status !== "published" && (
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={save.isPending || content === row.content}
+            onClick={() => save.mutate()}
+          >
+            Save changes
+          </Button>
+          <Button
+            size="sm"
+            disabled={publish.isPending || !canPublish || content !== row.content}
+            onClick={() => publish.mutate()}
+            title={
+              !canPublish
+                ? "Connect LinkedIn first"
+                : content !== row.content
+                  ? "Save changes first"
+                  : undefined
+            }
+          >
+            {publish.isPending
+              ? "Publishing…"
+              : row.status === "failed"
+                ? "Retry publish"
+                : "Publish to LinkedIn"}
+          </Button>
+        </div>
       )}
     </div>
   );

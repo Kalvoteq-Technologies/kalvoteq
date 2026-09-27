@@ -483,6 +483,45 @@ export type Database = {
           },
         ]
       }
+      linkedin_accounts: {
+        Row: {
+          access_token_encrypted: string
+          access_token_expires_at: string
+          connected_by: string | null
+          created_at: string
+          id: string
+          organization_name: string
+          organization_urn: string
+          refresh_token_encrypted: string | null
+          refresh_token_expires_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          access_token_encrypted: string
+          access_token_expires_at: string
+          connected_by?: string | null
+          created_at?: string
+          id?: string
+          organization_name: string
+          organization_urn: string
+          refresh_token_encrypted?: string | null
+          refresh_token_expires_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          access_token_encrypted?: string
+          access_token_expires_at?: string
+          connected_by?: string | null
+          created_at?: string
+          id?: string
+          organization_name?: string
+          organization_urn?: string
+          refresh_token_encrypted?: string | null
+          refresh_token_expires_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       post_tags: {
         Row: {
           post_id: string
@@ -781,6 +820,56 @@ export type Database = {
           },
         ]
       }
+      social_posts: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          error: string | null
+          external_post_id: string | null
+          id: string
+          platform: string
+          post_id: string
+          published_at: string | null
+          status: Database["public"]["Enums"]["social_post_status"]
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          external_post_id?: string | null
+          id?: string
+          platform?: string
+          post_id: string
+          published_at?: string | null
+          status?: Database["public"]["Enums"]["social_post_status"]
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          external_post_id?: string | null
+          id?: string
+          platform?: string
+          post_id?: string
+          published_at?: string | null
+          status?: Database["public"]["Enums"]["social_post_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_posts_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tags: {
         Row: {
           created_at: string
@@ -911,6 +1000,7 @@ export type Database = {
       project_status: "discovery" | "in_progress" | "on_hold" | "delivered"
       request_status: "open" | "in_progress" | "resolved"
       research_job_status: "pending" | "completed" | "failed"
+      social_post_status: "draft" | "published" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1059,6 +1149,7 @@ export const Constants = {
       project_status: ["discovery", "in_progress", "on_hold", "delivered"],
       request_status: ["open", "in_progress", "resolved"],
       research_job_status: ["pending", "completed", "failed"],
+      social_post_status: ["draft", "published", "failed"],
     },
   },
 } as const
