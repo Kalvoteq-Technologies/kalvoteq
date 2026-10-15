@@ -48,7 +48,7 @@ export const submitProjectRequest = createServerFn({ method: "POST" })
         projectDescription: data.projectDescription,
       },
       idempotencyKey: `project-request-confirm-${key}`,
-      replyTo: "hello@kalvoteq.com",
+      replyTo: "support@kalvoteq.com",
     });
 
     return { ok: true };

@@ -24,7 +24,7 @@ export const submitContactEnquiry = createServerFn({ method: "POST" })
     await sendTemplateEmail("contact-confirmation", data.email, {
       templateData: { name: data.name, interest: data.interest, message: data.message },
       idempotencyKey: `contact-confirm-${key}`,
-      replyTo: "hello@kalvoteq.com",
+      replyTo: "support@kalvoteq.com",
     });
 
     return { ok: true };

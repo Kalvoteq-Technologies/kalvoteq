@@ -32,7 +32,7 @@ export const submitCareerApplication = createServerFn({ method: "POST" })
     await sendTemplateEmail("career-application-confirmation", data.email, {
       templateData: { name: data.name, role: data.role },
       idempotencyKey: `career-application-confirm-${key}`,
-      replyTo: "hello@kalvoteq.com",
+      replyTo: "support@kalvoteq.com",
     });
 
     return { ok: true };

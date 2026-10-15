@@ -56,7 +56,7 @@ export const submitTalentRequest = createServerFn({ method: "POST" })
         technologyStack: data.technologyStack,
       },
       idempotencyKey: `talent-request-confirm-${key}`,
-      replyTo: "hello@kalvoteq.com",
+      replyTo: "support@kalvoteq.com",
     });
 
     return { ok: true };
