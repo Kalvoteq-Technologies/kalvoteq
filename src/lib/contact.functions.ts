@@ -15,7 +15,7 @@ export const submitContactEnquiry = createServerFn({ method: "POST" })
     const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
     const key = `${data.email}-${Date.now()}`;
 
-    await sendTemplateEmail("contact-notification", "hello@kalvoteq.com", {
+    await sendTemplateEmail("contact-notification", "support@kalvoteq.com", {
       templateData: data,
       idempotencyKey: `contact-notify-${key}`,
       replyTo: data.email,

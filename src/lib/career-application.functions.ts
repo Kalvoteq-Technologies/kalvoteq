@@ -23,7 +23,7 @@ export const submitCareerApplication = createServerFn({ method: "POST" })
     const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
     const key = `${data.email}-${Date.now()}`;
 
-    await sendTemplateEmail("career-application-notification", "hello@kalvoteq.com", {
+    await sendTemplateEmail("career-application-notification", "support@kalvoteq.com", {
       templateData: data,
       idempotencyKey: `career-application-notify-${key}`,
       replyTo: data.email,

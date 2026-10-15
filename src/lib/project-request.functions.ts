@@ -35,7 +35,7 @@ export const submitProjectRequest = createServerFn({ method: "POST" })
     const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
     const key = `${data.businessEmail}-${Date.now()}`;
 
-    await sendTemplateEmail("project-request-notification", "hello@kalvoteq.com", {
+    await sendTemplateEmail("project-request-notification", "support@kalvoteq.com", {
       templateData: data,
       idempotencyKey: `project-request-notify-${key}`,
       replyTo: data.businessEmail,

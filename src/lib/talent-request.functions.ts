@@ -43,7 +43,7 @@ export const submitTalentRequest = createServerFn({ method: "POST" })
     const { sendTemplateEmail } = await import("@/lib/email-templates/send-email");
     const key = `${data.businessEmail}-${Date.now()}`;
 
-    await sendTemplateEmail("talent-request-notification", "hello@kalvoteq.com", {
+    await sendTemplateEmail("talent-request-notification", "support@kalvoteq.com", {
       templateData: data,
       idempotencyKey: `talent-request-notify-${key}`,
       replyTo: data.businessEmail,
