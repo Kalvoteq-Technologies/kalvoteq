@@ -9,7 +9,7 @@ export const company = {
   legalName: "Kalvoteq Technologies OU",
   registryCode: "17583081",
   vatNumber: "EE103021928",
-  email: "hello@kalvoteq.com",
+  email: "support@kalvoteq.com",
   phone: "+372 54210899",
   address: "Amburi 20, 11711 Tallinn, Estonia",
   hours: "Mon–Fri, 08:00–17:00 EET",

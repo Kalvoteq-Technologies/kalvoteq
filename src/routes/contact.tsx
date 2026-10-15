@@ -94,7 +94,7 @@ function ContactForm() {
             toast.success("Thank you — we will reply within one business day.");
           })
           .catch(() => {
-            toast.error("Something went wrong. Please email hello@kalvoteq.com directly.");
+            toast.error("Something went wrong. Please email support@kalvoteq.com directly.");
           })
           .finally(() => setSubmitting(false));
       }}

@@ -111,7 +111,7 @@ function ProjectRequestForm() {
         void submitRequest({ data: parsed.data })
           .then(() => setSubmitted(true))
           .catch(() => {
-            toast.error("Something went wrong. Please email hello@kalvoteq.com directly.");
+            toast.error("Something went wrong. Please email support@kalvoteq.com directly.");
           })
           .finally(() => setSubmitting(false));
       }}
